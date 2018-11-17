@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Graphic Map Builder</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/basic.css">
+        <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/gameui.css">
+        <script type="text/javascript" src="/JSObjects/libs/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/actionable.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/embodiment.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/collectable.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/container.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/inventory.js"></script>
+        <script type="text/javascript" src="/JSObjects/builder/EmbodimentBuilder.js"></script>
+    </head>
+    <body>
+        <div id="EmbodimentBuilder-Menu">
+            <button id="newEmbodiment" onclick="javascript:newEmbodiment();">Create Embodiment</button>
+            <button id="newCollectable" onclick="javascript:newCollectable();">Create Collectable</button>
+            <button id="addInventory" onclick="javascript:addInventory();">Add Inventory to Embodiment</button>
+            <!-- TODO Maintain prototypes
+            <button onclick="javascript:save();">Save</button>
+            <button onclick="javascript:addNew();">Add Prototype to inventory</button>
+            -->
+             <button onclick="javascript:serialize();">Serialize</button>
+        </div>
+        <div id="Embodiment-Builder-Form">
+            Select Create Embodiment or Create Collectable to load a form
+        </div>
+    </body>
+</html>

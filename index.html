@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Machine Dream</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/basic.css">
+        <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/gameui.css">
+        <script type="text/javascript" src="/JSObjects/libs/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/graphicMap.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/actionable.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/embodiment.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/collectable.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/container.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/inventory.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/scenario.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/actionableDisplay.js"></script>
+        <!-- Libraries to visualize --> 
+        <script type="text/javascript" src="JSObjects/viewer/embodimentViewer.js"></script>
+        <!-- Libraries to genrate --> 
+        <script type="text/javascript" src="JSObjects/builder/embodimentGenerator.js"></script>
+    </head>
+    <body>
+        <!-- Player Generator -->
+        <button onclick="javascript:playerGenerator.autoGenerate();">auto generate random player</button>
+        <div id="player-generator-demo"></div>
+        <!-- Player Inspect: Inspect Features, Inspect Collections, Inspect Thoughts -->
+        <div id="player-inspector-demo"></div>
+        <!-- Room View; The java function should load the ROOM/world from a file -->
+        <div id="room-viewer-demo"></div>
+        <!-- Game -->
+        <div id="game">
+            <div id="sidemenu"></div>
+            <div id="room-viewer"></div>
+        </div>
+        <div>TODO write content</div>
+        <button onclick="javascript:jQuery('#inventoryDiv').load('/DreamingMachine/js/views/inventory.html');">inventory</button>
+        <div id="inventoryDiv"></div>
+        <div>
+			<canvas id="cs"></canvas>
+        </div>
+    </body>
+</html>

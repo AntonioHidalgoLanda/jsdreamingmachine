@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Graphic Map Builder</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="/DreamingMachine/js/libs/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/DreamingMachine/js/machineDream/graphicMap.js"></script>
+        <script type="text/javascript" src="/DreamingMachine/js/builder/GraphicMapBuilder.js"></script>
+    </head>
+    <body>
+        <div id="GraphicMapBuilder-Menu">
+            <button onclick="javascript:serialize();">Serialize</button>
+            <button onclick="javascript:addNew();">Add</button>
+            <button onclick="javascript:save();">Save</button>
+        </div>
+        <div id="GraphicMapBuilder-Form">
+            <input  type="text" id="forn-id" /><br/>
+            <input type="file" id="form-file"/><br/>
+            <img id="form-img" height="150"><br/>
+            <input  type="hidden" id="form-b64" />
+        </div>
+        <div id="GraphicMapBuilder-Table-div">Loading</div>
+    </body>
+</html>
