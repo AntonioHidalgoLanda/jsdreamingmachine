@@ -213,6 +213,8 @@ ActionableDreamer.prototype.deserializeJSON = function (json) {
 
 
 // Testing script- this wil go out
+console.log("TODO - Create test class for actionableDreamer");
+console.log("TODO - Imports Exports to actionableDreamer");
 
 // test create body with no base
 var dreamerBody = new ActionableDreamer();
@@ -247,9 +249,9 @@ dreamerBody.descriptions = ["Miner"];
 dreamerBody.addFeature("life", 1, {50: 0.3, 100: 0.9});
 dreamerBody.addFeature("energy", 1, {50: 0.5, 100: 0.2, 75: 0.7, 1: 1});  //last value with 100% chance to prevent missing the feature
 dreamerBody.addInventory("bag", 100, 0, 100, 0);
-dreamerBody.addItemToInventory("bag", "rock", 0.7, "prototype_rock");
-dreamerBody.addItemToInventory("bag", "rock", 0.7, "prototype_rock");
-dreamerBody.addItemToInventory("bag", "rock", 0.7, "prototype_rock");
+dreamerBody.addItemToInventory("bag", "rock1", 0.7, "prototype_rock");
+dreamerBody.addItemToInventory("bag", "rock2", 0.7, "prototype_rock");
+dreamerBody.addItemToInventory("bag", "rock3", 0.7, "prototype_rock");
 actionableDreamerCatalog.prototype_miner = dreamerBody;
 console.log(dreamerBody.dream());
 
