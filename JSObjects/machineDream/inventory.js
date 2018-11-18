@@ -89,7 +89,7 @@ Inventory.prototype.serializeJSON = function() {
 };
 
 Inventory.prototype.parseObject = function(obj) {
-    Container.call(this,obj);
+    Container.prototype.parseObject.call(this,obj);
     if ('maxWeight' in obj){
         this.maxWeight = obj.maxWeight;
     }

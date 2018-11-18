@@ -75,8 +75,8 @@ Embodiment.prototype.getInventory = function (name) {
     }
 };
 
-Embodiment.prototype.parseObject = function (obj) {
-    Actionable.call(this, obj);
+Embodiment.prototype.parseObject = function (obj, bKeepID) {
+    Actionable.prototype.parseObject.call(this, obj, bKeepID);
     if ("name" in obj) {
         this.name = obj.name;
     }
