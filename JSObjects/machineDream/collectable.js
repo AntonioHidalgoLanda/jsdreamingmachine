@@ -36,8 +36,8 @@ Collectable.prototype.getSize = function() {
     return this.size;
 };
 
-Collectable.prototype.parseObject = function(obj) {
-    Embodiment.call(this,obj);
+Collectable.prototype.parseObject = function(obj, bKeepID) {
+    Embodiment.prototype.parseObject.call(this, obj, bKeepID);
     if ('weight' in obj){
         this.weight = obj.weight;
     }

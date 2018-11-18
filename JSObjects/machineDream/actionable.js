@@ -41,8 +41,8 @@ Actionable.prototype.serializeJSON = function() {
     return JSON.stringify(this);
 };
 
-Actionable.prototype.parseObject = function(obj) {
-    if ('id' in obj){
+Actionable.prototype.parseObject = function(obj, bKeepID) {
+    if ('id' in obj && bKeepID === undefined){
         this.id = obj.id;
     }
     if ('features' in obj){
@@ -53,13 +53,12 @@ Actionable.prototype.parseObject = function(obj) {
     return this;
 };
 
-Actionable.prototype.deserializeJSON = function(json) {
+Actionable.prototype.deserializeJSON = function(json, bKeepID) {
     var obj_from_json = JSON.parse( json );
     if ( Array.isArray(obj_from_json)){
         obj_from_json = obj_from_json[1];
     }
-    
-    return this.parseObject(obj_from_json);
+    return this.parseObject(obj_from_json, bKeepID);
 };
 
 function generateUUID () { // Public Domain/MIT

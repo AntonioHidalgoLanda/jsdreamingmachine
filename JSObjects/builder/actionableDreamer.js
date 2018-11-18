@@ -1,35 +1,6 @@
-/*jslint devel: true */
-/* eslint-disable no-console */
 /*exported actionableDreamerCatalog*/
 /*global Collectable, Embodiment*/
-/*
-    <div style="background-color: lightgray;white-space: pre-wrap"><code>
-        {
-            Base:{...},
-            Names:[Joe,John,...],
-            Descriptions:[...],
-            Features:{
-                life:{p:1,vals:{75:0.05,100,0.9}},
-                charm:{p:.5,vals:{1:0.05,2,0.1}}
-            }
-            Inventories:{
-                Belongings:{
-                    weight:[100,20],
-                    size:[100,20],
-                    contents:{ring:{0.3,ring_prototype},charm:{0.1,charm_prototype}}
-                },
-                Thoughts:{
-                    weight:[0,0],
-                    size:[0,0],
-                    contents:{}}
-            }
-        }
-        </code></div>
-</ul>
-*/
-/*global
-console
-*/
+
 var actionableDreamerCatalog = {};
 
 function ActionableDreamer() {
@@ -89,8 +60,8 @@ ActionableDreamer.prototype.addItemToInventory = function (inventoryName, collec
 ActionableDreamer.prototype.getRandomValue = function (values) {
     "use strict";
     var random_number = Math.random() * (values.length - 0.001);
-    if (values.length <= 0) {
-        return "undefined";
+    if (values.length <= 0 || values === undefined) {
+        return undefined;
     }
     random_number = Math.floor(random_number);
     return values[random_number];
@@ -113,22 +84,38 @@ ActionableDreamer.prototype.dream = function () {
         size = (this.hasOwnProperty('size')) ? this.size : 0;
         if (this.hasOwnProperty('base') && this.base !== null) {
             actionable = new Collectable();
-            actionable.deserializeJSON(this.base.serializeJSON()); //Cloning
-            actionable.setName(name)
-                .setDescription(description)
-                .setPortraitID(portraitID)
-                .setWeight(weight)
-                .setSize(size);
+            actionable.deserializeJSON(this.base.serializeJSON(), true); //Cloning
+            if (name !== undefined) {
+                actionable.setName(name);
+            }
+            if (description !== undefined) {
+                actionable.setDescription(description);
+            }
+            if (portraitID !== undefined) {
+                actionable.setPortraitID(portraitID);
+            }
+            if (weight !== undefined) {
+                actionable.setWeight(weight);
+            }
+            if (size !== undefined) {
+                actionable.setSize(size);
+            }
         } else {
             actionable = new Collectable(name, description, weight, size, portraitID);
         }
     } else {
         if (this.hasOwnProperty('base') && this.base !== null) {
             actionable = new Embodiment();
-            actionable.deserializeJSON(this.base.serializeJSON()); //Cloning
-            actionable.setName(name)
-                .setDescription(description)
-                .setPortraitID(portraitID);
+            actionable.deserializeJSON(this.base.serializeJSON(), true); //Cloning
+            if (name !== undefined) {
+                actionable.setName(name);
+            }
+            if (description !== undefined) {
+                actionable.setDescription(description);
+            }
+            if (portraitID !== undefined) {
+                actionable.setPortraitID(portraitID);
+            }
             
         } else {
             actionable = new Embodiment(name, description, portraitID);
@@ -181,20 +168,33 @@ ActionableDreamer.prototype.serializeJSON = function () {
     return JSON.stringify(this);
 };
 
-/*
 ActionableDreamer.prototype.parseObject = function (obj) {
     "use strict";
-    var feature;
-    console.log("on development - ActionableDreamer.dream()");
-    if (obj.hasOwnProperty('id')) {
-        this.id = obj.id;
-    }
-    if (obj.hasOwnProperty('features')) {
-        for (feature in obj.features) {
-            if (obj.features.hasOwnProperty(feature)) {
-                this.setFeature(feature, obj.features[feature]);
-            }
+    if (obj.hasOwnProperty('base')) {
+        if (obj.base instanceof Embodiment) {
+            this.base = new Embodiment();
+        } else if (obj.base instanceof Collectable) {
+            this.base = new Collectable();
         }
+        this.base.deserializeJSON(obj.base.serializeJSON(), true);
+    } else {
+        this.base = null;
+    }
+    if (obj.hasOwnProperty('names')) {
+        this.names = JSON.parse(obj.names);
+    }
+    if (obj.hasOwnProperty('descriptions')) {
+        this.descriptions = JSON.parse(obj.descriptions);
+    }
+    if (obj.hasOwnProperty('portraitIDs')) {
+        this.portraitIDs = JSON.parse(obj.portraitIDs);
+    }
+    
+    if (obj.hasOwnProperty('features')) {
+        this.features = JSON.parse(obj.features);
+    }
+    if (obj.hasOwnProperty('inventories')) {
+        this.inventories = JSON.parse(obj.inventories);
     }
     return this;
 };
@@ -202,56 +202,9 @@ ActionableDreamer.prototype.parseObject = function (obj) {
 ActionableDreamer.prototype.deserializeJSON = function (json) {
     "use strict";
     var obj_from_json = JSON.parse(json);
-    console.log("on development - ActionableDreamer.dream()");
     if (Array.isArray(obj_from_json)) {
         obj_from_json = obj_from_json[1];
     }
     
     return this.parseObject(obj_from_json);
 };
-*/
-
-
-// Testing script- this wil go out
-console.log("TODO - Create test class for actionableDreamer");
-console.log("TODO - Imports Exports to actionableDreamer");
-
-// test create body with no base
-var dreamerBody = new ActionableDreamer();
-dreamerBody.names = ["Joe Bloggs", "John Doe", "Jean Doe"];
-dreamerBody.descriptions = ["Pirate", "Player 1", "Boss"];
-dreamerBody.addFeature("life", 1, {50: 0.3, 100: 0.9});
-dreamerBody.addFeature("energy", 1, {50: 0.5, 100: 0.2, 75: 0.7, 1: 1});  //last value with 100% chance to prevent missing the feature
-dreamerBody.addFeature("listening", 0.7, {"rock": 0.3, "pop": 0.5, "calssical": 0.3});
-actionableDreamerCatalog.prototype_basic = dreamerBody;
-console.log(dreamerBody.dream());
-
-
-// create body with base
-// TODO
-console.log("on development - Test dream bodies with predefined base");
-
-// create body with objects
-var dreamerObject = new ActionableDreamer();
-dreamerObject.names = ["Rock"];
-dreamerObject.size = 1;
-dreamerObject.descriptions = ["Stone", "Pebbles", "Rock", "Ore"];
-dreamerObject.portraitIDs = ["stone.jpg"];
-dreamerObject.addFeature("value", 0.7, {100: 0.3, 10: 0.5, 1000: 0.3});
-actionableDreamerCatalog.prototype_rock = dreamerObject;
-
-console.log(dreamerObject.dream());
-
-// create to bodies with 1 object of the same type and another of a different type
-dreamerBody = new ActionableDreamer();
-dreamerBody.names = ["Jack Sparrow", "Jean Bloggs"];
-dreamerBody.descriptions = ["Miner"];
-dreamerBody.addFeature("life", 1, {50: 0.3, 100: 0.9});
-dreamerBody.addFeature("energy", 1, {50: 0.5, 100: 0.2, 75: 0.7, 1: 1});  //last value with 100% chance to prevent missing the feature
-dreamerBody.addInventory("bag", 100, 0, 100, 0);
-dreamerBody.addItemToInventory("bag", "rock1", 0.7, "prototype_rock");
-dreamerBody.addItemToInventory("bag", "rock2", 0.7, "prototype_rock");
-dreamerBody.addItemToInventory("bag", "rock3", 0.7, "prototype_rock");
-actionableDreamerCatalog.prototype_miner = dreamerBody;
-console.log(dreamerBody.dream());
-
