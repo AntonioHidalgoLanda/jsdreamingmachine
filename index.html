@@ -22,8 +22,9 @@ and open the template in the editor.
         <script type="text/javascript" src="/JSObjects/machineDream/actionableDisplay.js"></script>
         <!-- Libraries to visualize --> 
         <script type="text/javascript" src="JSObjects/viewer/embodimentViewer.js"></script>
-        <!-- Libraries to genrate --> 
+        <!-- Libraries to dream --> 
         <script type="text/javascript" src="JSObjects/builder/embodimentGenerator.js"></script>
+        <script type="text/javascript" src="JSObjects/builder/actionableDreamer.js"></script>
     </head>
     <body>
         <!-- Player Generator -->
@@ -38,7 +39,25 @@ and open the template in the editor.
             <div id="sidemenu"></div>
             <div id="room-viewer"></div>
         </div>
-        <div>TODO write content</div>
+        <div>
+            <h3><b>MVP</b> TO DO</h3>
+            <ul>
+                <li>Dream Body
+                    <ul>
+                        <li><span style="color: green">DONE</span> Dream name, description features and inventories from constants </li>
+                        <li>Dream belongins and thoughts from constants</li>
+                        <li><span style="color: green">DONE</span> Dream all from serialized string (from object DreamActionable/Embodiment)</li>
+                    </ul>
+                </li>
+                <li>Dream Room</li>
+                <li>Dream Room with doors</li>
+                <li>Dream with actions</li>
+                <li>Dream with goals/quests</li>
+                <li>Save</li>
+                <li>Load</li>
+                <li>Work with images</li>
+            </ul>
+        </div>
         <button onclick="javascript:jQuery('#inventoryDiv').load('/DreamingMachine/js/views/inventory.html');">inventory</button>
         <div id="inventoryDiv"></div>
         <div>

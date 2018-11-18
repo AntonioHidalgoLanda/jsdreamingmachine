@@ -49,7 +49,7 @@ embodimentViewer.showInventories = function (){
     var innerHTML = "";
     for (var inventoryName in this.current().inventories){
         var inventory = this.current().getInventory(inventoryName);
-        innerHTML+= inventoryName + " " + this.showInventoryHeadInline(inventory) + "<button>open</button></br>";
+        innerHTML+= inventoryName + " " + this.showInventoryHeadInline(inventory) + "<button onclick=\"javascript:alert('on development');\">open</button></br>";
     };
     return innerHTML;
 };
