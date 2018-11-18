@@ -46,59 +46,7 @@ and open the template in the editor.
                     <ul>
                         <li><span style="color: green">DONE</span> Dream name, description features and inventories from constants </li>
                         <li>Dream belongins and thoughts from constants</li>
-                        <li>Dream all from serialized string (from object DreamActionable/Embodiment) including:</li>
-                        <ul>
-                            <li>Base body</li>
-                            <li>Dictionary (list) of Names</li>
-                            <li>Dictionary of Descriptions</li>
-                            <li>List with potential features
-                                <ul>
-                                    <li>Feature Name</li>
-                                    <li>Probability of geting this feature</li>
-                                    <li>Posible Values</li>
-                                    <ul>
-                                        <li>List of each posible value and its probability</li>
-                                        <li><span style="color: gray">Range and Distribution (even,normal,gauss??)</span></li>
-                                    </ul>
-                                </ul>
-                            </li>
-                            <li>List of Potential Inventories
-                                <ul>
-                                    <li>Inventory Name</li>
-                                    <li>Average Max Weight and Deviation</li>
-                                    <li>Average Max Size and Deviation</li>
-                                    <li>List with potential contents
-                                        <ul>
-                                            <li>Collecatable Name</li>
-                                            <li>Probability of geting this content</li>
-                                            <li>Reference to prototype in dictionary (Should work the same but does not need the header)</li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <div style="background-color: lightgray;white-space: pre-wrap"><code>
-                                {
-                                    Base:{...},
-                                    Names:[Joe,John,...],
-                                    Descriptions:[...],
-                                    Features:{
-                                        life:{p:1,vals:{75:0.05,100,0.9}},
-                                        charm:{p:.5,vals:{1:0.05,2,0.1}}
-                                    }
-                                    Inventories:{
-                                        Belongings:{
-                                            weight:[100,20],
-                                            size:[100,20],
-                                            contents:{ring:{0.3,ring_prototype},charm:{0.1,charm_prototype}}
-                                        },
-                                        Thoughts:{
-                                            weight:[0,0],
-                                            size:[0,0],
-                                            contents:{}}
-                                    }
-                                }
-                                </code></div>
-                        </ul>
+                        <li><span style="color: green">DONE</span> Dream all from serialized string (from object DreamActionable/Embodiment)</li>
                     </ul>
                 </li>
                 <li>Dream Room</li>
