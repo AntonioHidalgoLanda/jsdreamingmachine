@@ -1,8 +1,10 @@
-/*global jQuery, document*/
+/*global jQuery, document, Embodiment, Inventory*/
+
 function EmbodimentViewer(divRootRef) {
     "use strict";
     this.HEADER_DIV_CLASS = "visualization-header";
     this.BODY_DIV_CLASS = "visualization-body";
+    this.BACK_DIV_CLASS = "visualization-back";
     this.SEC1_DIV_CLASS = "visualization-sec1";
     this.SEC2_DIV_CLASS = "visualization-sec2";
     this.stack = [];
@@ -10,15 +12,40 @@ function EmbodimentViewer(divRootRef) {
     this.divRoot = jQuery("#" + this.divRootRef)[0];
     this.divHeader = jQuery("#" + this.divRootRef + " ." + this.HEADER_DIV_CLASS)[0];
     this.divBody = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS)[0];
+    this.divBack = jQuery("#" + this.divRootRef + " ." + this.BACK_DIV_CLASS)[0];
     this.divSection1 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC1_DIV_CLASS)[0];
     this.divSection2 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC2_DIV_CLASS)[0];
     this.checkHTMLStruct();
 }
 
+var handlerPopIntoViewer = function (that) {
+    "use strict";
+    return function () {
+        that.pop();
+    };
+};
+
 EmbodimentViewer.prototype.checkHTMLStruct = function () {
     "use strict";
-    var div;
+    var div, button;
     if (this.divRoot !== undefined) {
+        if (this.stack.length > 1) {
+            if (this.divBack === undefined) {
+                div = document.createElement('div');
+                div.className = this.BACK_DIV_CLASS;
+                this.divRoot.append(div);
+                this.divBack = div;
+            }
+            this.divBack.innerHTML = "";
+            button = document.createElement('button');
+            button.textContent = "back";
+            button.onclick = handlerPopIntoViewer(this);
+            this.divBack.appendChild(button);
+        } else {
+            if (this.divBack !== undefined) {
+                this.divBack.innerHTML = "";
+            }
+        }
         if (this.divHeader === undefined || this.divBody === undefined) {
             div = document.createElement('div');
             div.className = this.HEADER_DIV_CLASS;
@@ -48,6 +75,7 @@ EmbodimentViewer.prototype.updatedivRootRef = function (divRootRef) {
     this.divRoot = jQuery("#" + this.divRootRef);
     this.divHeader = jQuery("#" + this.divRootRef + " ." + this.HEADER_DIV_CLASS)[0];
     this.divBody = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS)[0];
+    this.divBack = jQuery("#" + this.divRootRef + " ." + this.BACK_DIV_CLASS)[0];
     this.divSection1 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC1_DIV_CLASS)[0];
     this.divSection2 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC2_DIV_CLASS)[0];
     this.checkHTMLStruct();
@@ -57,6 +85,12 @@ EmbodimentViewer.prototype.updatedivRootRef = function (divRootRef) {
 EmbodimentViewer.prototype.push = function (embodiment) {
     "use strict";
     this.stack.push(embodiment);
+    this.show();
+};
+
+EmbodimentViewer.prototype.pop = function () {
+    "use strict";
+    this.stack.pop();
     this.show();
 };
 
@@ -73,15 +107,18 @@ EmbodimentViewer.prototype.current = function () {
 EmbodimentViewer.prototype.showEmbodimentHeader = function () {
     "use strict";
     var innerHTML = "", current;
-    if (this.divHeader === undefined) {
-        this.checkHTMLStruct();
-    }
     current = this.current();
     if (current === null) {
         this.divHeader.innerHTML = "";
         return this;
     }
-    innerHTML += "name: " + current.getName() + "</br>" + "description: " + current.getDescription() + "</br>" + "PortraitID: " + current.getPortraitID() + "</br>";
+    if (current instanceof Inventory) {
+        innerHTML += "weight: " + current.totalWeight + "/" + current.maxWeight + "</br>" + "size: " + current.totalSize + "/" + current.maxSize + "</br>";
+    }
+    
+    if (current instanceof Embodiment) {
+        innerHTML += "name: " + current.getName() + "</br>" + "description: " + current.getDescription() + "</br>" + "PortraitID: " + current.getPortraitID() + "</br>";
+    }
     
     if (current.hasOwnProperty('weight')) {
         innerHTML += "weight: " + current.getWeight() + "</br>";
@@ -96,9 +133,6 @@ EmbodimentViewer.prototype.showEmbodimentHeader = function () {
 EmbodimentViewer.prototype.showFeatures = function () {
     "use strict";
     var current, fName, table, tbdy, tr, td;
-    if (this.divSection1 === undefined || this.divSection2 === undefined) {
-        this.checkHTMLStruct();
-    }
     current = this.current();
     if (current === null || current === undefined || !current.hasOwnProperty("features")) {
         this.divSection1.innerHTML = "";
@@ -137,15 +171,21 @@ EmbodimentViewer.prototype.showInventoryHeadInline = function (inventory) {
     return innerHTML;
 };
 
+
+// the use of a function inside of a function is to allos to pass local variables through the function stack.
+var handlerPushIntoViewer = function (that, embodiment) {
+    "use strict";
+    return function () {
+        that.push(embodiment);
+    };
+};
+
 EmbodimentViewer.prototype.showInventories = function () {
     "use strict";
     var current, table, tbdy, tr, td, inventoryName, inventory, inventories, button;
-    if (this.divSection1 === undefined || this.divSection2 === undefined) {
-        this.checkHTMLStruct();
-    }
     current = this.current();
+    this.divSection2.innerHTML = "";
     if (current === null || current === undefined || !current.hasOwnProperty("inventories")) {
-        this.divSection2.innerHTML = "";
         return this;
     }
     inventories = current.inventories;
@@ -162,13 +202,44 @@ EmbodimentViewer.prototype.showInventories = function () {
             td = document.createElement('td');
             button = document.createElement('button');
             button.textContent = "open";
-            // the use of a function inside of a function is to allos to pass local variables through the function stack.
-            var prehander = function (a) { return function () {
-                console.log("hello " + a);
-                console.log(this);
-            }};
-            var handler = prehander(inventoryName);
-            button.onclick = handler;
+            button.onclick = handlerPushIntoViewer(this, inventory);
+            td.appendChild(button);
+            tr.appendChild(td);
+            tbdy.appendChild(tr);
+        }
+    }
+    table.appendChild(tbdy);
+    this.divSection2.appendChild(table);
+    return this;
+};
+
+// TODO, work with an additional section instead
+EmbodimentViewer.prototype.showInventoryItems = function () {
+    "use strict";
+    var current, table, tbdy, tr, td, collectable, collectables, button, i;
+    current = this.current();
+    if (!(current instanceof Inventory)) {
+        return this;
+    }
+    this.divSection2.innerHTML = "";
+    collectables = current.collectables;
+    console.log("Show inventory Items");
+    console.log(current);
+    console.log(collectables);
+    table = document.createElement('table');
+    table.className = "collectables";
+    tbdy = document.createElement('tbody');
+    for (i in collectables) {
+        if (collectables.hasOwnProperty(i)) {
+            collectable = collectables[i];
+            tr = document.createElement('tr');
+            td = document.createElement('td');
+            td.appendChild(document.createTextNode(collectable.name + " (" + collectable.weight + "w/" + collectable.size + "s)")); //TODO - Visualize Collectable Header
+            tr.appendChild(td);
+            td = document.createElement('td');
+            button = document.createElement('button');
+            button.textContent = "open";
+            button.onclick = handlerPushIntoViewer(this, collectable);
             td.appendChild(button);
             tr.appendChild(td);
             tbdy.appendChild(tr);
@@ -181,9 +252,11 @@ EmbodimentViewer.prototype.showInventories = function () {
 
 EmbodimentViewer.prototype.show = function () {
     "use strict";
+    this.checkHTMLStruct();
     this.showEmbodimentHeader();
     this.showFeatures();
     this.showInventories();
+    this.showInventoryItems();
     
     return this;
 };
