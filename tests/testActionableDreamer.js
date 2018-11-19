@@ -34,10 +34,11 @@ console.log(actionableDreamerCatalog.dream("prototype_rock"));
 dreamerBody = new ActionableDreamer();
 // create body with base
 dreamerBody.base = body;
-dreamerBody.addInventory("bag", 100, 0, 100, 0);
-dreamerBody.addItemToInventory("bag", "rock1", 0.7, "prototype_rock");
-dreamerBody.addItemToInventory("bag", "rock2", 0.7, "prototype_rock");
-dreamerBody.addItemToInventory("bag", "rock3", 0.7, "prototype_rock");
+dreamerBody.addInventory("Thoughs", 1, 0, 100, 0);
+dreamerBody.addInventory("Items", 100, 0, 100, 0);
+dreamerBody.addItemToInventory("Items", "rock1", 0.7, "prototype_rock");
+dreamerBody.addItemToInventory("Items", "rock2", 0.7, "prototype_rock");
+dreamerBody.addItemToInventory("Items", "rock3", 0.7, "prototype_rock");
 actionableDreamerCatalog.addDreamer("prototype_miner", dreamerBody, 10);
 
 console.log(actionableDreamerCatalog.dream("prototype_miner"));

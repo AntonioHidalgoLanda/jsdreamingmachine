@@ -157,16 +157,18 @@ EmbodimentViewer.prototype.showInventories = function () {
             inventory = current.getInventory(inventoryName);
             tr = document.createElement('tr');
             td = document.createElement('td');
-            td.appendChild(document.createTextNode(this.showInventoryHeadInline(inventory)));
+            td.appendChild(document.createTextNode(inventoryName + " " + this.showInventoryHeadInline(inventory)));
             tr.appendChild(td);
             td = document.createElement('td');
             button = document.createElement('button');
             button.textContent = "open";
-            button.setAttribute('data-inventory', inventoryName);
-            button.onclick = function () {
-                console.log("hello ");
+            // the use of a function inside of a function is to allos to pass local variables through the function stack.
+            var prehander = function (a) { return function () {
+                console.log("hello " + a);
                 console.log(this);
-            };
+            }};
+            var handler = prehander(inventoryName);
+            button.onclick = handler;
             td.appendChild(button);
             tr.appendChild(td);
             tbdy.appendChild(tr);
