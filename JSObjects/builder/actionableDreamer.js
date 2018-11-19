@@ -3,6 +3,28 @@
 
 var actionableDreamerCatalog = {};
 
+actionableDreamerCatalog.addDreamer = function (reference, dreamer, maxDreams) {
+    "use strict";
+    this[reference] = {'dreamer': dreamer, 'max': maxDreams, 'dreams': []};
+    return this;
+};
+
+actionableDreamerCatalog.dream = function (reference) {
+    "use strict";
+    var dream, embodiment;
+    if (this.hasOwnProperty(reference)) {
+        dream = this[reference];
+        if (dream.max > dream.dreams.length) {
+            embodiment = dream.dreamer.dream();
+            dream.dreams.push(embodiment);
+        }
+    }
+    return embodiment;
+};
+
+//resume dream
+// console.log("actionableDreamer: actionableDreamerCatalog.resumeDream: On Development")
+
 function ActionableDreamer() {
     "use strict";
     this.base = null; // TODO add base actionable
@@ -153,7 +175,7 @@ ActionableDreamer.prototype.dream = function () {
                     if (this.checkProbability(this.inventories[inventory].items[content].p)) {
                         if (actionableDreamerCatalog.hasOwnProperty(this.inventories[inventory].items[content].ref)) {
                             actionable.getInventory(inventory)
-                                .push(actionableDreamerCatalog[this.inventories[inventory].items[content].ref].dream());
+                                .push(actionableDreamerCatalog.dream(this.inventories[inventory].items[content].ref));
                         }
                     }
                 }
