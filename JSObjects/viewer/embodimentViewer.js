@@ -223,9 +223,6 @@ EmbodimentViewer.prototype.showInventoryItems = function () {
     }
     this.divSection2.innerHTML = "";
     collectables = current.collectables;
-    console.log("Show inventory Items");
-    console.log(current);
-    console.log(collectables);
     table = document.createElement('table');
     table.className = "collectables";
     tbdy = document.createElement('tbody');

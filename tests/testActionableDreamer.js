@@ -41,9 +41,11 @@ dreamerBody.addItemToInventory("Items", "rock2", 0.7, "prototype_rock");
 dreamerBody.addItemToInventory("Items", "rock3", 0.7, "prototype_rock");
 actionableDreamerCatalog.addDreamer("prototype_miner", dreamerBody, 10);
 
+console.log("Body with inventory and base");
 console.log(actionableDreamerCatalog.dream("prototype_miner"));
 
 
+console.log("TODO - Test Body with inventory in base");
 console.log("TODO - Imports Exports to actionableDreamer");
 
 console.log("Actionable dreamer catalog:");
