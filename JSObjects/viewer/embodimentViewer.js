@@ -1,4 +1,4 @@
-/*global jQuery, document, Embodiment, Inventory*/
+/*global jQuery, document, Embodiment, Inventory, Container*/
 
 function EmbodimentViewer(divRootRef) {
     "use strict";
@@ -213,12 +213,17 @@ EmbodimentViewer.prototype.showInventories = function () {
     return this;
 };
 
+EmbodimentViewer.prototype.showInventoryItemHeader = function (item) {
+    "use strict";
+    return item.name;
+};
+
 // TODO, work with an additional section instead
 EmbodimentViewer.prototype.showInventoryItems = function () {
     "use strict";
     var current, table, tbdy, tr, td, collectable, collectables, button, i;
     current = this.current();
-    if (!(current instanceof Inventory)) {
+    if (!(current instanceof Container)) {
         return this;
     }
     this.divSection2.innerHTML = "";
@@ -231,7 +236,7 @@ EmbodimentViewer.prototype.showInventoryItems = function () {
             collectable = collectables[i];
             tr = document.createElement('tr');
             td = document.createElement('td');
-            td.appendChild(document.createTextNode(collectable.name + " (" + collectable.weight + "w/" + collectable.size + "s)")); //TODO - Visualize Collectable Header
+            td.appendChild(document.createTextNode(this.showInventoryItemHeader(collectable)));
             tr.appendChild(td);
             td = document.createElement('td');
             button = document.createElement('button');

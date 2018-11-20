@@ -26,7 +26,7 @@ dreamerObject.size = 1;
 dreamerObject.descriptions = ["lorem ipsum..."];
 dreamerObject.portraitIDs = ["stone.jpg"];
 dreamerObject.addFeature("value", 0.7, {100: 0.3, 10: 0.5, 1000: 0.3});
-actionableDreamerCatalog.addDreamer("prototype_rock", dreamerObject, 10);
+actionableDreamerCatalog.addDreamer("prototype_rock", dreamerObject, 100);
 
 console.log(actionableDreamerCatalog.dream("prototype_rock"));
 
@@ -43,6 +43,16 @@ actionableDreamerCatalog.addDreamer("prototype_miner", dreamerBody, 10);
 
 console.log("Body with inventory and base");
 console.log(actionableDreamerCatalog.dream("prototype_miner"));
+
+
+console.log("Dreaming an Scenario");
+var dreamerRoom = new ScenarioDreamer();
+dreamerRoom.addEmbodiment("body1",3,1,0.75,'prototype_miner');
+dreamerRoom.addEmbodiment("collectable",4,2,0.95,'prototype_rock');
+console.log(dreamerRoom.dream());
+
+
+
 
 
 console.log("TODO - Test Body with inventory in base");

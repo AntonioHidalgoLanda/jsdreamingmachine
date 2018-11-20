@@ -69,6 +69,9 @@ and open the template in the editor.
     <!-- // This might go in a different file. We are using a Catolg from test -->
     <script type="text/javascript">
         var embodimentViewer = new EmbodimentViewer("player-inspector-demo");
-        embodimentViewer.push(actionableDreamerCatalog.prototype_miner.dreams[0]);
+        var dreamerRoom = new ScenarioDreamer();
+        dreamerRoom.addEmbodiment("body1",3,1,0.75,'prototype_miner');
+        dreamerRoom.addEmbodiment("collectable",4,2,0.95,'prototype_rock');
+        embodimentViewer.push(dreamerRoom.dream());
     </script>
 </html>

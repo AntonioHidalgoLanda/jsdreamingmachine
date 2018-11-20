@@ -1,6 +1,20 @@
 /*exported actionableDreamerCatalog*/
 /*global Collectable, Embodiment, Scenario*/
 
+/* TODO Separate Statistical functions in a different file */
+var stat_deviate = function (average, deviation) {
+    "use strict";
+    var random = Math.random() * deviation * 2;
+    return average - deviation + random;
+};
+
+var stat_probability = function (probability) {
+    "use strict";
+    return (probability >= Math.random());
+};
+
+
+/* TODO Separate actionableDreamerCatalog in a different file */
 var actionableDreamerCatalog = {};
 
 actionableDreamerCatalog.addDreamer = function (reference, dreamer, maxDreams) {
@@ -22,6 +36,7 @@ actionableDreamerCatalog.dream = function (reference) {
     return embodiment;
 };
 
+/* TODO Either merge all the dreamers or separate them in different files */
 function ScenarioDreamer() {
     "use strict";
     this.embodiments = {};
@@ -31,17 +46,6 @@ ScenarioDreamer.prototype.addEmbodiment = function (embodimentRef, average, devi
     "use strict";
     this.embodiments[embodimentRef] = {'average': average, 'deviation': deviation, 'probability': probability, 'catalogRef': catalogRef};
     return this;
-};
-
-var stat_deviate = function (average, deviation) {
-    "use strict";
-    var random = Math.random() * deviation * 2;
-    return average - deviation + random;
-};
-
-var stat_probability = function (probability) {
-    "use strict";
-    return (probability >= Math.random());
 };
 
 ScenarioDreamer.prototype.dream = function () {
@@ -57,7 +61,7 @@ ScenarioDreamer.prototype.dream = function () {
             }
         }
     }
-    return this;
+    return room;
 };
 
 

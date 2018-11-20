@@ -1,26 +1,31 @@
 /*global Container*/
 
+Scenario.prototype = new Container();
+Scenario.prototype.constructor = Scenario;
+
 function Scenario() {
     "use strict";
-    this.embodiments = new Container();
+    Container.call(this);
 }
 
 Scenario.prototype.addObject = function (embodiment) {
     "use strict";
-    this.embodiments.push(embodiment);
+    if (embodiment !== undefined) {
+        Container.prototype.push.call(this, embodiment);
+    }
     return this;
 };
 
 
 Scenario.prototype.removeObject = function (embodiment) {
     "use strict";
-    this.embodiments.remove(embodiment);
+    Container.prototype.remove.call(this, embodiment);
     return this;
 };
  
 Scenario.prototype.getEverybody = function () {
     "use strict";
-    return this.embodiments.collectables;
+    return this.collectables;
 };
 
 
