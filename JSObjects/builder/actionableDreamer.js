@@ -1,5 +1,5 @@
 /*exported actionableDreamerCatalog*/
-/*global Collectable, Embodiment*/
+/*global Collectable, Embodiment, Scenario*/
 
 var actionableDreamerCatalog = {};
 
@@ -21,6 +21,45 @@ actionableDreamerCatalog.dream = function (reference) {
     }
     return embodiment;
 };
+
+function ScenarioDreamer() {
+    "use strict";
+    this.embodiments = {};
+}
+
+ScenarioDreamer.prototype.addEmbodiment = function (embodimentRef, average, deviation, probability, catalogRef) {
+    "use strict";
+    this.embodiments[embodimentRef] = {'average': average, 'deviation': deviation, 'probability': probability, 'catalogRef': catalogRef};
+    return this;
+};
+
+var stat_deviate = function (average, deviation) {
+    "use strict";
+    var random = Math.random() * deviation * 2;
+    return average - deviation + random;
+};
+
+var stat_probability = function (probability) {
+    "use strict";
+    return (probability >= Math.random());
+};
+
+ScenarioDreamer.prototype.dream = function () {
+    "use strict";
+    var room = new Scenario(), body, record, count;
+    for (body in this.embodiments) {
+        if (this.embodiments.hasOwnProperty(body)) {
+            record = this.embodiments[body];
+            for (count = stat_deviate(record.average, record.deviation); count > 0; count -= 1) {
+                if (stat_probability(record.probability)) {
+                    room.addObject(actionableDreamerCatalog.dream(record.catalogRef));
+                }
+            }
+        }
+    }
+    return this;
+};
+
 
 //resume dream
 // console.log("actionableDreamer: actionableDreamerCatalog.resumeDream: On Development")
@@ -89,11 +128,6 @@ ActionableDreamer.prototype.getRandomValue = function (values) {
     return values[random_number];
 };
 
-ActionableDreamer.prototype.checkProbability = function (probability) {
-    "use strict";
-    return probability >= Math.random();
-};
-
 ActionableDreamer.prototype.dream = function () {
     "use strict";
     var actionable, name, description, weight, size, portraitID, feature, value, inventory, iSize, iWeight, content;
@@ -146,10 +180,10 @@ ActionableDreamer.prototype.dream = function () {
     //  REFACTORING - Features asignments
     for (feature in this.features) {
         if (this.features.hasOwnProperty(feature)) {
-            if (this.checkProbability(this.features[feature].p)) { // REFACTORING - check if the probability check passes
+            if (stat_probability(this.features[feature].p)) { // REFACTORING - check if the probability check passes
                 for (value in this.features[feature].values) {
                     if (this.features[feature].values.hasOwnProperty(value)) {
-                        if (this.checkProbability(this.features[feature].values[value])) { // Check probability in values 
+                        if (stat_probability(this.features[feature].values[value])) { // Check probability in values 
                             actionable.setFeature(feature, value);
                         }
                     }
@@ -165,14 +199,16 @@ ActionableDreamer.prototype.dream = function () {
         if (this.inventories.hasOwnProperty(inventory)) {
             iSize = this.inventories[inventory].size.max - this.inventories[inventory].size.deviation;
             iSize += Math.random() * this.inventories[inventory].size.deviation * 2;
+            iSize = Math.floor(iSize);
             iWeight = this.inventories[inventory].weight.max - this.inventories[inventory].weight.deviation;
             iWeight += Math.random() * this.inventories[inventory].weight.deviation * 2;
+            iWeight = Math.floor(iWeight);
             if (!actionable.getInventory(inventory)) {
                 actionable.createInventory(inventory, iWeight, iSize);
             }
             for (content in this.inventories[inventory].items) {
                 if (this.inventories[inventory].items.hasOwnProperty(content)) {
-                    if (this.checkProbability(this.inventories[inventory].items[content].p)) {
+                    if (stat_probability(this.inventories[inventory].items[content].p)) {
                         if (actionableDreamerCatalog.hasOwnProperty(this.inventories[inventory].items[content].ref)) {
                             actionable.getInventory(inventory)
                                 .push(actionableDreamerCatalog.dream(this.inventories[inventory].items[content].ref));
