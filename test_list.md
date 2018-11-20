@@ -41,5 +41,16 @@ Player moving Room (GAME)
 	 - Save game
 	 - Load game
 
+Play with Quests and Goals (greedy algorithms???)
+	- Goals
+		- Define Conditional Statements (use the same from Actions)
+		- They have priority/Importance
+		- They may have expiration condition, such us validity time
+		- Altogether, Important goals may
+			+ generate temporal subgoals (dividi and vincci)
+			+ deprecate less important goals.
+		- A greedy algorithm will try to populate actions in a intention list based on existings goals
+
+
 
 

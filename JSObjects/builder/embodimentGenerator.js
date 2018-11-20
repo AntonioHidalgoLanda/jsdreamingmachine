@@ -25,5 +25,5 @@ playerGenerator.autoGenerate = function(){
     this.generateFeature(embodiment);
     embodiment.createInventory("Belongings", 0, 20);
     embodiment.createInventory("Knowledge",1,0);
-    $("#player-generator-demo").html(embodimentViewer.show());
+    //$("#player-generator-demo").html(embodimentViewer.show());
 };

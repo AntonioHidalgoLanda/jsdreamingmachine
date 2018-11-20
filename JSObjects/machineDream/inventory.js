@@ -8,6 +8,7 @@ Inventory.prototype = new Container();
 Inventory.prototype.constructor = Inventory;
 
 function Inventory (maxWeight,maxSize) {
+    Container.call(this);
     this.maxWeight = maxWeight;
     this.maxSize = maxSize;
     this.totalWeight = 0;
