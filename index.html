@@ -12,20 +12,26 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/basic.css">
         <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/gameui.css">
         <script type="text/javascript" src="/JSObjects/libs/jquery/jquery.js"></script>
-        <script type="text/javascript" src="/JSObjects/machineDream/graphicMap.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/actionable.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/embodiment.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/collectable.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/container.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/inventory.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/scenario.js"></script>
-        <script type="text/javascript" src="/JSObjects/machineDream/actionableDisplay.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/interaction/selector.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/interaction/selectorBinder.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/interaction/executor.js"></script>
         <!-- Libraries to visualize --> 
         <script type="text/javascript" src="JSObjects/viewer/embodimentViewer.js"></script>
         <!-- Libraries to dream --> 
         <script type="text/javascript" src="JSObjects/builder/actionableDreamer.js"></script>
+        <!-- Basic Extensions --> 
+        <script type="text/javascript" src="extensions/basicBodiesData.js"></script>
+        <script type="text/javascript" src="extensions/basicBodies.js"></script>
+        <script type="text/javascript" src="extensions/basicActions.js"></script>
         <!-- Manual Testing Scripts -->
         <script type="text/javascript" src="tests/testActionableDreamer.js"></script>
+        <script type="text/javascript" src="tests/testExtensionBasicActions.js"></script>
     </head>
     <body>
         <!-- Player Generator
@@ -70,8 +76,12 @@ and open the template in the editor.
     <script type="text/javascript">
         var embodimentViewer = new EmbodimentViewer("player-inspector-demo");
         var dreamerRoom = new ScenarioDreamer();
-        dreamerRoom.addEmbodiment("body1",3,1,0.75,'prototype_miner');
-        dreamerRoom.addEmbodiment("collectable",4,2,0.95,'prototype_rock');
+        dreamerRoom.addEmbodiment("body1", 3, 1, 0.75, 'prototype_basic');
+        dreamerRoom.addEmbodiment("collectable", 4, 2, 0.95, 'prototype_energypack');
         embodimentViewer.push(dreamerRoom.dream());
+        
+        
+        console.log("Actionable dreamer catalog:");
+        console.log(actionableDreamerCatalog);
     </script>
 </html>
