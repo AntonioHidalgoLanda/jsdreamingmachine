@@ -55,10 +55,11 @@ var executeConsumeAndUpdate = function (action) {
 Action - heal
 use:
      actionCatalog.heal.bind("target", embodiment);
-     actionCatalog.heal.bind("potion", potion);
+     actionCatalog.heal.bind("caller", potion);
      actionCatalog.heal.execute();
 */
 var action = new Executor(executeFeatureIncreaseCapped);
+action.setCaller("caller");
 //action.put(inreference, selector);
 action.put("target", new Selector("feature", "life"));
 action.put("cap", new Selector("feature", "max_life"));
@@ -67,7 +68,7 @@ action.put("increase", new Selector("feature", "heal"));
 //action.map(outreference, inreference);
 action.map("target", "target");
 action.map("target", "cap");
-action.map("potion", "increase");
+action.map("caller", "increase");
 
 actionCatalog.addAction("heal", action);
 
@@ -76,10 +77,11 @@ Action - restore
 Description: Recover energy
 use:
      actionCatalog.restore.bind("target", embodiment);
-     actionCatalog.restore.bind("potion", potion);
+     actionCatalog.restore.bind("caller", potion);
      actionCatalog.restore.execute();
 */
 action = new Executor(executeFeatureIncreaseCapped);
+action.setCaller("caller");
 //action.put(inreference, selector);
 action.put("target", new Selector("feature", "energy"));
 action.put("cap", new Selector("feature", "max_energy"));
@@ -88,7 +90,7 @@ action.put("increase", new Selector("feature", "restoring"));
 //action.map(outreference, inreference);
 action.map("target", "target");
 action.map("target", "cap");
-action.map("potion", "increase");
+action.map("caller", "increase");
 
 actionCatalog.addAction("restore", action);
 
@@ -104,6 +106,7 @@ use:
      actionCatalog.drop.execute();
 */
 action = new Executor(executeMove);
+action.setCaller("owner");
 //action.put(inreference, selector);
 action.put("source", new Selector("inventory", "Belongings"));
 action.put("item", new Selector());
@@ -127,6 +130,7 @@ use:
      actionCatalog.pick.execute();
 */
 action = new Executor(executeMove);
+action.setCaller("owner");
 //action.put(inreference, selector);
 action.put("destination", new Selector("inventory", "Belongings"));
 action.put("item", new Selector());
@@ -178,6 +182,7 @@ use:
      actionCatalog.consume_heal.execute();
 */
 action = new Executor(executeConsumeAndUpdate);
+action.setCaller("owner");
 //action.put(inreference, selector);
 action.put("target", new Selector("feature", "life"));
 action.put("cap", new Selector("feature", "max_life"));
@@ -203,6 +208,7 @@ use:
      actionCatalog.consume_restore.execute();
 */
 action = new Executor(executeConsumeAndUpdate);
+action.setCaller("owner");
 //action.put(inreference, selector);
 action.put("target", new Selector("feature", "energy"));
 action.put("cap", new Selector("feature", "max_energy"));

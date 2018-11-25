@@ -1,4 +1,4 @@
-/*exported actionCatalog*/
+/*exported actionCatalog */
 /*
 global SelectorBinder, Executor
 */
@@ -50,8 +50,15 @@ Executor.prototype.constructor = Executor;
 function Executor(executeFunction) {
     "use strict";
     SelectorBinder.call(this);
+    this.caller = undefined;
     this.fExecute = executeFunction;
 }
+
+Executor.prototype.setCaller = function (caller) {
+    "use strict";
+    this.caller = caller;
+    return this;
+};
 
 Executor.prototype.execute = function () {
     "use strict";
