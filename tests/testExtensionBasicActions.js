@@ -17,3 +17,15 @@ actionCatalog.heal.execute();
 console.log("Results Healing Action");
 console.log(JSON.stringify(body));
 console.log(potion);
+
+body.setFeature('energy', 20);
+potion = actionableDreamerCatalog.dream('prototype_energypack');
+console.log("Testing Restoring Action");
+console.log(JSON.stringify(body));
+console.log(potion);
+actionCatalog.restore.bind("target", body);
+actionCatalog.restore.bind("potion", potion);
+actionCatalog.restore.execute();
+console.log("Results Restoring Action");
+console.log(JSON.stringify(body));
+console.log(potion);

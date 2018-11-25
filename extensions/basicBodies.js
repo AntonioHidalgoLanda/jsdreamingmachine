@@ -13,7 +13,7 @@ dreamerBody.names = lifepack_names;
 dreamerBody.descriptions = lifepack_descriptions;
 dreamerBody.weight = 0.2;
 dreamerBody.size = 1;
-dreamerBody.addFeature("life", 1, {50: 0.5, 20: 0.3, 30: 1});
+dreamerBody.addFeature("heal", 1, {50: 0.5, 20: 0.3, 30: 1});
 actionableDreamerCatalog.addDreamer("prototype_lifepack", dreamerBody, 10);
 
 // energy pack
@@ -22,7 +22,7 @@ dreamerBody.names = enerypack_names;
 dreamerBody.descriptions = enerypack_descriptions;
 dreamerBody.weight = 0.2;
 dreamerBody.size = 1;
-dreamerBody.addFeature("energy", 1, {50: 0.5, 20: 0.3, 30: 1});
+dreamerBody.addFeature("restoring", 1, {50: 0.5, 20: 0.3, 30: 1});
 actionableDreamerCatalog.addDreamer("prototype_energypack", dreamerBody, 10);
 
 

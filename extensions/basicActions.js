@@ -25,9 +25,8 @@ var action = new Executor(function (action) {
 //action.put(inreference, selector);
 action.put("t_health", new Selector("feature", "life"));
 action.put("t_mhealth", new Selector("feature", "max_life"));
-
 //action.put("potion", new Selector());
-action.put("p_health", new Selector("feature", "life"));
+action.put("p_health", new Selector("feature", "heal"));
 
 //action.map(outreference, inreference);
 action.map("target", "t_health");
@@ -40,9 +39,9 @@ actionCatalog.addAction("heal", action);
 Action - restore
 Description: Recover energy
 use:
-     actionCatalog.heal.bind("target", embodiment);
-     actionCatalog.heal.bind("potion", potion);
-     actionCatalog.heal.execute();
+     actionCatalog.restore.bind("target", embodiment);
+     actionCatalog.restore.bind("potion", potion);
+     actionCatalog.restore.execute();
 */
 action = new Executor(function (action) {
     "use strict";
@@ -56,9 +55,8 @@ action = new Executor(function (action) {
 //action.put(inreference, selector);
 action.put("t_energy", new Selector("feature", "energy"));
 action.put("t_mEnergy", new Selector("feature", "max_energy"));
-
 //action.put("potion", new Selector());
-action.put("p_energy", new Selector("feature", "energy"));
+action.put("p_energy", new Selector("feature", "restoring"));
 
 //action.map(outreference, inreference);
 action.map("target", "t_energy");
@@ -68,12 +66,96 @@ action.map("potion", "p_energy");
 actionCatalog.addAction("restore", action);
 
 
+// Function for moving items (pick, drop) Moving Items:
+var executeMove = function (action) {
+    "use strict";
+    var source = action.get("source"),
+        item = action.get("item"),
+        destination = action.get("destination");
+    
+    if (source.contains(item)) {
+        destination.push(item);
+        if (destination.contains(item)) {
+            source.remove(item);
+        }
+    }
+};
 
-// drop from own inventory to room/or remove
+/*
+Action - drop
+Description: Drop an item from own inventory into another container (Room or somebody else)
+TODO: handle Pre-requisites: destination.contains(item) && source.fitsin(item)
+use:
+     actionCatalog.drop.bind("owner", embodiment);
+     actionCatalog.drop.bind("item", item);
+     actionCatalog.drop.bind("destination", container); // Inventory//Room
+     actionCatalog.drop.execute();
+*/
+action = new Executor(executeMove);
+//action.put(inreference, selector);
+action.put("source", new Selector("inventory", "Belongings"));
+action.put("item", new Selector());
+action.put("destination", new Selector());
 
-// pick from room to own inventory
+//action.map(outreference, inreference);
+action.map("owner", "source");
+action.map("item", "item");
+action.map("destination", "destination");
 
-// give from own inventory to inventory in someone else in the room
+actionCatalog.addAction("drop", action);
+
+/*
+Action - pick
+Description: Drop an item from own inventory into another container (Room or somebody else)
+TODO: handle Pre-requisites: source.contains(item) && destination.fitsin(item)
+use:
+     actionCatalog.pick.bind("owner", embodiment);
+     actionCatalog.pick.bind("item", item);
+     actionCatalog.pick.bind("source", container); // Inventory//Room
+     actionCatalog.pick.execute();
+*/
+action = new Executor(executeMove);
+//action.put(inreference, selector);
+action.put("destination", new Selector("inventory", "Belongings"));
+action.put("item", new Selector());
+action.put("source", new Selector());
+
+//action.map(outreference, inreference);
+action.map("owner", "destination");
+action.map("item", "item");
+action.map("source", "source");
+
+actionCatalog.addAction("pick", action);
+
+
+/*
+Action - destroy
+Description: destroy an item from own inventory
+use:
+     actionCatalog.destroy.bind("owner", embodiment);
+     actionCatalog.destroy.bind("item", item);
+     actionCatalog.destroy.execute();
+*/
+action = new Executor(function (action) {
+    "use strict";
+    var source = action.get("source"),
+        item = action.get("item");
+    
+    if (source.contains(item)) {
+        source.remove(item);
+    }
+});
+//action.put(inreference, selector);
+action.put("source", new Selector("inventory", "Belongings"));
+action.put("item", new Selector());
+
+//action.map(outreference, inreference);
+action.map("owner", "source");
+action.map("item", "item");
+
+actionCatalog.addAction("destroy", action);
+
+
 // move to room
 // lock door
 // open door
