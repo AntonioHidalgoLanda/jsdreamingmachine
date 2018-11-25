@@ -21,6 +21,7 @@ and open the template in the editor.
         <script type="text/javascript" src="/JSObjects/machineDream/interaction/selector.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/interaction/selectorBinder.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/interaction/executor.js"></script>
+        <script type="text/javascript" src="/JSObjects/machineDream/interaction/executorHandler.js"></script>
         <!-- Libraries to visualize --> 
         <script type="text/javascript" src="JSObjects/viewer/embodimentViewer.js"></script>
         <!-- Libraries to dream --> 
@@ -76,12 +77,45 @@ and open the template in the editor.
     <script type="text/javascript">
         var embodimentViewer = new EmbodimentViewer("player-inspector-demo");
         var dreamerRoom = new ScenarioDreamer();
+        var room;
         dreamerRoom.addEmbodiment("body1", 3, 1, 0.75, 'prototype_basic');
         dreamerRoom.addEmbodiment("collectable", 4, 2, 0.95, 'prototype_energypack');
-        embodimentViewer.push(dreamerRoom.dream());
+        room = dreamerRoom.dream();
+        embodimentViewer.push(room);
         
         
         console.log("Actionable dreamer catalog:");
         console.log(actionableDreamerCatalog);
+        
+        
+//
+// Test Executor handler - This should go to another file
+//
+        console.log("Testing Executor Handler:");
+        console.log("room:");
+        console.log(room);
+        var self = room.getEverybody()[0];
+        console.log("self:");
+        console.log(self);
+        executorHandler = new ExecutorHandler(self, room);
+        
+        console.log("ExecutorHandler::Funtions:");
+        console.log("getAllTargets:");
+        console.log(executorHandler.getAllTargets());
+
+        console.log("Show roles for consume_restore:");
+        console.log(actionCatalog.consume_restore.getRoles());
+        console.log("getTargetsFor:");
+        console.log(executorHandler.getTargetsFor("consume_restore", "item"));
+
+        console.log("getActions:");
+        console.log(executorHandler.getActions());
+
+        var target = self.getInventory("Belongings").collectables[0];
+        console.log("getActions with targer: " + target.name);
+        console.log(executorHandler.getActions(target));
+
+        
+        
     </script>
 </html>

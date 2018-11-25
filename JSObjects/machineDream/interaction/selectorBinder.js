@@ -20,6 +20,7 @@ SelectorBinder.prototype.map = function (outreference, inreference) {
     "use strict";
     if (outreference !== undefined && inreference !== undefined) {
         this.maps[inreference] = outreference;
+        this.bindings[outreference] = undefined;
     }
     return this;
 };
