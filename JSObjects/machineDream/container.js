@@ -10,6 +10,11 @@ function Container () {
 }
 
 
+Container.prototype.getEverybody = function () {
+    "use strict";
+    return this.collectables;
+};
+
 Container.prototype.contains = function(actionable) {
     var idx = this.collectables.indexOf(actionable);
     return (idx > -1);
@@ -44,6 +49,7 @@ Container.prototype.merge = function(container) {
     return this;
 };
 
+// @deprecated
 Container.prototype.transferFrom = function(container) {
     if (container instanceof Container){
         for (var c in container.collectables) {

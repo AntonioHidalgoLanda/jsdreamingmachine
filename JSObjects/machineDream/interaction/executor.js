@@ -1,7 +1,5 @@
 /*exported actionCatalog */
-/*
-global SelectorBinder, Executor
-*/
+/*global SelectorBinder, Executor*/
 
 /*
 # Simple Actions
@@ -44,19 +42,67 @@ actionCatalog.addAction = function (reference, action) {
     return this;
 };
 
+
+actionCatalog.bindingsIn = function (actionRef, roleRef, candidates) {
+    "use strict";
+    var bindings = [], action;
+    if (actionRef !== undefined && this.hasOwnProperty(actionRef)) {
+        action = this[actionRef];
+        bindings = action.bindingsIn(roleRef, candidates);
+    }
+    return bindings;
+};
+
+/*
+ *
+ * @param caller Actionable with the role caller in the action
+ * @param target Actionable with any role in the action, if undefined, we return all the actions where caller is the caller.
+ */
+actionCatalog.getCallerActions = function (caller, target) {
+    "use strict";
+    var action, actionRef, actions = [], callerRole, bInsert, roles, role, idx;
+    for (actionRef in actionCatalog) {
+        if (actionCatalog.hasOwnProperty(actionRef)) {
+            action = actionCatalog[actionRef];
+            if (action instanceof Executor) {
+                callerRole = action.callerRef;
+                bInsert = false;
+                if (target !== undefined) {
+                    roles = action.getRoles();
+                    for (idx in roles) {
+                        if (roles.hasOwnProperty(idx)) {
+                            role = roles[idx];
+                            bInsert = bInsert || action.canBind(role, target);
+                            if (bInsert) {
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    bInsert = true;
+                }
+                if (bInsert && action.canBind(callerRole, caller)) {
+                    actions.push(actionRef);
+                }
+            }
+        }
+    }
+    return actions;
+};
+
 Executor.prototype = new SelectorBinder();
 Executor.prototype.constructor = Executor;
 
 function Executor(executeFunction) {
     "use strict";
     SelectorBinder.call(this);
-    this.caller = undefined;
+    this.callerRef = undefined;
     this.fExecute = executeFunction;
 }
 
 Executor.prototype.setCaller = function (caller) {
     "use strict";
-    this.caller = caller;
+    this.callerRef = caller;
     return this;
 };
 
@@ -66,4 +112,37 @@ Executor.prototype.execute = function () {
     return this;
 };
 
+Executor.prototype.canBind = function (outReference, actionable) {
+    "use strict";
+    var inReference, selector;
+    if (this.bindings.hasOwnProperty(outReference)) {
+        for (inReference in this.maps) {
+            if (this.maps.hasOwnProperty(inReference) && this.maps[inReference] === outReference && this.selectors.hasOwnProperty(inReference)) {
+                selector = this.selectors[inReference];
+                if (selector === undefined || selector.get(actionable) === undefined) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+};
 
+Executor.prototype.bindingsIn = function (outReference, actionables) {
+    "use strict";
+    var idx, actionable, bindings = [];
+    for (idx in actionables) {
+        if (actionables.hasOwnProperty(idx)) {
+            actionable = actionables[idx];
+            if (this.canBind(outReference, actionable)) {
+                bindings.push(actionable);
+            }
+        }
+    }
+    return bindings;
+};
+Executor.prototype.getRoles = function () {
+    "use strict";
+    return Object.keys(this.bindings);
+};

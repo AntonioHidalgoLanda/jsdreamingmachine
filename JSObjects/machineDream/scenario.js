@@ -22,10 +22,5 @@ Scenario.prototype.removeObject = function (embodiment) {
     Container.prototype.remove.call(this, embodiment);
     return this;
 };
- 
-Scenario.prototype.getEverybody = function () {
-    "use strict";
-    return this.collectables;
-};
 
 

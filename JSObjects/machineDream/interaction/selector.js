@@ -7,15 +7,23 @@ function Selector(subtype, refId) {
 
 Selector.prototype.get = function (embodiment) {
     "use strict";
+    var inventory;
     if (this.subtype !== undefined && this.refId !== undefined) {
         if (this.subtype.toLowerCase() === "feature") {
             if (embodiment.hasOwnProperty("features")) {
                 return embodiment.getFeature(this.refId);
+            } else {
+                return undefined;
             }
         } else if (this.subtype.toLowerCase() === "inventory") {
             if (embodiment.hasOwnProperty("inventories")) {
-                return embodiment.getInventory(this.refId);
+                inventory = embodiment.getInventory(this.refId);
+                return (inventory !== null) ? inventory : undefined;
+            } else {
+                return undefined;
             }
+        } else {
+            return undefined;
         }
     }
     return embodiment;
