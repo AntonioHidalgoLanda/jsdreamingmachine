@@ -3,70 +3,24 @@
 /*global Executor, Selector, actionCatalog
 */
 
-
-// examples
-// exchange based on features (heal, combat, skill-up, interact)
 /*
-Action - heal
-use:
-     actionCatalog.heal.bind("target", embodiment);
-     actionCatalog.heal.bind("potion", potion);
-     actionCatalog.heal.execute();
+* Function exchange based on features (heal, combat, skill-up, interact)
+* @param: target (feature), increase (feature), cap (feature)
 */
-var action = new Executor(function (action) {
+var executeFeatureIncreaseCapped = function (action) {
     "use strict";
     // action.get(inreference);
-    var newHealth = Number(action.get("t_health")) + Number(action.get("p_health"));
-    if (newHealth > action.get("t_mhealth")) {
-        newHealth = action.get("t_mhealth");
+    var newVal = Number(action.get("target")) + Number(action.get("increase"));
+    if (newVal > Number(action.get("cap"))) {
+        newVal = action.get("cap");
     }
-    action.set("t_health", newHealth);
-});
-//action.put(inreference, selector);
-action.put("t_health", new Selector("feature", "life"));
-action.put("t_mhealth", new Selector("feature", "max_life"));
-//action.put("potion", new Selector());
-action.put("p_health", new Selector("feature", "heal"));
-
-//action.map(outreference, inreference);
-action.map("target", "t_health");
-action.map("target", "t_mhealth");
-action.map("potion", "p_health");
-
-actionCatalog.addAction("heal", action);
+    action.set("target", newVal);
+};
 
 /*
-Action - restore
-Description: Recover energy
-use:
-     actionCatalog.restore.bind("target", embodiment);
-     actionCatalog.restore.bind("potion", potion);
-     actionCatalog.restore.execute();
+* Function for moving items (pick, drop) Moving Items:
+* @param: source (Container/Inventory), item (Collectable), destination (Container/Inventory)
 */
-action = new Executor(function (action) {
-    "use strict";
-    // action.get(inreference);
-    var newEnergy = Number(action.get("t_energy")) + Number(action.get("p_energy"));
-    if (newEnergy > action.get("t_mEnergy")) {
-        newEnergy = action.get("t_mEnergy");
-    }
-    action.set("t_energy", newEnergy);
-});
-//action.put(inreference, selector);
-action.put("t_energy", new Selector("feature", "energy"));
-action.put("t_mEnergy", new Selector("feature", "max_energy"));
-//action.put("potion", new Selector());
-action.put("p_energy", new Selector("feature", "restoring"));
-
-//action.map(outreference, inreference);
-action.map("target", "t_energy");
-action.map("target", "t_mEnergy");
-action.map("potion", "p_energy");
-
-actionCatalog.addAction("restore", action);
-
-
-// Function for moving items (pick, drop) Moving Items:
 var executeMove = function (action) {
     "use strict";
     var source = action.get("source"),
@@ -80,6 +34,64 @@ var executeMove = function (action) {
         }
     }
 };
+
+/*
+*  Function to update and consume
+* @param: source (c/i), item (cl/eb), destination (c/i), target (f), increase (f), cap (f)
+*/
+var executeConsumeAndUpdate = function (action) {
+    "use strict";
+    var source = action.get("source"),
+        item = action.get("item");
+    
+    if (source.contains(item)) {
+        executeFeatureIncreaseCapped(action);
+        source.remove(item);
+    }
+};
+
+
+/*
+Action - heal
+use:
+     actionCatalog.heal.bind("target", embodiment);
+     actionCatalog.heal.bind("potion", potion);
+     actionCatalog.heal.execute();
+*/
+var action = new Executor(executeFeatureIncreaseCapped);
+//action.put(inreference, selector);
+action.put("target", new Selector("feature", "life"));
+action.put("cap", new Selector("feature", "max_life"));
+action.put("increase", new Selector("feature", "heal"));
+
+//action.map(outreference, inreference);
+action.map("target", "target");
+action.map("target", "cap");
+action.map("potion", "increase");
+
+actionCatalog.addAction("heal", action);
+
+/*
+Action - restore
+Description: Recover energy
+use:
+     actionCatalog.restore.bind("target", embodiment);
+     actionCatalog.restore.bind("potion", potion);
+     actionCatalog.restore.execute();
+*/
+action = new Executor(executeFeatureIncreaseCapped);
+//action.put(inreference, selector);
+action.put("target", new Selector("feature", "energy"));
+action.put("cap", new Selector("feature", "max_energy"));
+action.put("increase", new Selector("feature", "restoring"));
+
+//action.map(outreference, inreference);
+action.map("target", "target");
+action.map("target", "cap");
+action.map("potion", "increase");
+
+actionCatalog.addAction("restore", action);
+
 
 /*
 Action - drop
@@ -154,6 +166,58 @@ action.map("owner", "source");
 action.map("item", "item");
 
 actionCatalog.addAction("destroy", action);
+
+//
+// Actions Updating Features with Consumables
+//
+/*
+Action - consume_heal
+use:
+     actionCatalog.consume_heal.bind("owner", embodiment);
+     actionCatalog.consume_heal.bind("item", potion);
+     actionCatalog.consume_heal.execute();
+*/
+action = new Executor(executeConsumeAndUpdate);
+//action.put(inreference, selector);
+action.put("target", new Selector("feature", "life"));
+action.put("cap", new Selector("feature", "max_life"));
+action.put("increase", new Selector("feature", "heal"));
+action.put("source", new Selector("inventory", "Belongings"));
+action.put("item", new Selector());
+
+//action.map(outreference, inreference);
+action.map("owner", "target");
+action.map("owner", "cap");
+action.map("item", "increase");
+action.map("owner", "source");
+action.map("item", "item");
+
+actionCatalog.addAction("consume_heal", action);
+
+/*
+Action - restore
+Description: Recover energy
+use:
+     actionCatalog.consume_restore.bind("owner", embodiment);
+     actionCatalog.consume_restore.bind("item", potion);
+     actionCatalog.consume_restore.execute();
+*/
+action = new Executor(executeConsumeAndUpdate);
+//action.put(inreference, selector);
+action.put("target", new Selector("feature", "energy"));
+action.put("cap", new Selector("feature", "max_energy"));
+action.put("increase", new Selector("feature", "restoring"));
+action.put("source", new Selector("inventory", "Belongings"));
+action.put("item", new Selector());
+
+//action.map(outreference, inreference);
+action.map("owner", "target");
+action.map("owner", "cap");
+action.map("item", "increase");
+action.map("owner", "source");
+action.map("item", "item");
+
+actionCatalog.addAction("consume_restore", action);
 
 
 // move to room
