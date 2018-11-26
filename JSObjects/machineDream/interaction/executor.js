@@ -73,8 +73,8 @@ actionCatalog.getCallerActions = function (caller, target) {
                     for (idx in roles) {
                         if (roles.hasOwnProperty(idx)) {
                             role = roles[idx];
-                            bInsert = bInsert || action.canBind(role, target);
-                            if (bInsert && action.assertTargerCaller(caller, target, role)) {
+                            bInsert = bInsert || (action.canBind(role, target) && action.assertTargerCaller(caller, target, role));
+                            if (bInsert) {
                                 break;
                             }
                         }

@@ -141,7 +141,9 @@ action.put("source", new Selector());
 action.map("owner", "destination");
 action.map("item", "item");
 action.map("source", "source");
-action.addPrecondition(new Statement(new Substatement(action, "item"), new Substatement(action, "destination"), Statement.STATEMENTS.not_in));
+// precondition the item is in the destination; 
+action.addPrecondition(new Statement(new Substatement(action, "item"), new Substatement(action, "source"), Statement.STATEMENTS.is_in));
+// precondition the source is not empty
 action.addPrecondition(new Statement(new Substatement(action, "source"), new Substatement(""), Statement.STATEMENTS.not_empty));
 
 actionCatalog.addAction("pick", action);
