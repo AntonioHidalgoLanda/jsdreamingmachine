@@ -53,6 +53,7 @@ actionCatalog.bindingsIn = function (actionRef, roleRef, candidates) {
     return bindings;
 };
 
+
 /*
  *
  * @param caller Actionable with the role caller in the action
@@ -73,7 +74,7 @@ actionCatalog.getCallerActions = function (caller, target) {
                         if (roles.hasOwnProperty(idx)) {
                             role = roles[idx];
                             bInsert = bInsert || action.canBind(role, target);
-                            if (bInsert) {
+                            if (bInsert && action.assertTargerCaller(caller, target, role)) {
                                 break;
                             }
                         }
@@ -129,6 +130,31 @@ Executor.prototype.canBind = function (outReference, actionable) {
     return false;
 };
 
+Executor.prototype.assertTargerCaller = function (caller, target, role) {
+    "use strict";
+    var pRoles = this.getPreconditionRoles(), index, assertion = true;
+    if (pRoles !== undefined && pRoles instanceof Array && this.callerRef !== undefined) {
+        if (pRoles.length === 0) {
+            return true;
+        }
+        index = pRoles.indexOf(this.callerRef);
+        if (index > -1) {
+            pRoles.splice(index, 1);
+        }
+        index = pRoles.indexOf(role);
+        if (index > -1) {
+            pRoles.splice(index, 1);
+        }
+        if (pRoles.length === 0) {
+            this.bind(this.callerRef, caller);
+            this.bind(role, target);
+            assertion = this.assert();
+            this.unbindAll();
+        }
+    }
+    return assertion;
+};
+
 Executor.prototype.bindingsIn = function (outReference, actionables) {
     "use strict";
     var idx, actionable, bindings = [];
@@ -141,8 +167,4 @@ Executor.prototype.bindingsIn = function (outReference, actionables) {
         }
     }
     return bindings;
-};
-Executor.prototype.getRoles = function () {
-    "use strict";
-    return Object.keys(this.bindings);
 };

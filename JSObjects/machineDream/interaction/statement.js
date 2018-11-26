@@ -1,3 +1,4 @@
+/*global SelectorBinder, Container, Actionable */
 /*
 Include in all statements the level of believe
 Include an accessibility, i.e. free (), people who I know, people who look align,...
@@ -35,3 +36,78 @@ Include an accessibility, i.e. free (), people who I know, people who look align
     f) Lie
     
 */
+function Substatement(value, inReference) {
+    "use strict";
+    this.value = value;
+    this.inReference = inReference;
+}
+
+Substatement.prototype.get = function () {
+    "use strict";
+    if (this.value instanceof SelectorBinder) {
+        return this.value.get(this.inReference);
+    } else {
+        return this.value;
+    }
+};
+
+function Statement(leftStatement, rightStatement, condition) {
+    "use strict";
+    this.left = leftStatement;
+    this.right = rightStatement;
+    this.statement = condition;
+}
+
+Statement.STATEMENTS = {"equal": "=", "lesser_than": ">", "lesser_equal": ">=", "greater_than": ">", "greater_equal": ">=", "is_in": "in", "not_in": "!in", "not_equal": "!=", "not_empty": "!empty"};
+
+Statement.prototype.getInReferences = function () {
+    "use strict";
+    var inReferences = [];
+    if (this.left.inReference !== undefined) {
+        inReferences.push(this.left.inReference);
+    }
+    if (this.right.inReference !== undefined) {
+        inReferences.push(this.right.inReference);
+    }
+    return inReferences;
+};
+
+Statement.prototype.assert = function () {
+    "use strict";
+    var container, actionable;
+    switch (this.statement) {
+    case Statement.STATEMENTS.equal:
+        return (this.left.get() === this.right.get());
+    case Statement.STATEMENTS.not_equal:
+        return (this.left.get() !== this.right.get());
+    case Statement.STATEMENTS.greater_equal:
+        return (this.left.get() >= this.right.get());
+    case Statement.STATEMENTS.greater_than:
+        return (this.left.get() > this.right.get());
+    case Statement.STATEMENTS.lesser_equal:
+        return (this.left.get() <= this.right.get());
+    case Statement.STATEMENTS.lesser_than:
+        return (this.left.get() < this.right.get());
+    case Statement.STATEMENTS.is_in:
+        actionable = this.left.get();
+        container = this.right.get();
+        if (container instanceof Container && actionable instanceof Actionable) {
+            return container.contains(actionable);
+        }
+        return undefined;
+    case Statement.STATEMENTS.not_in:
+        actionable = this.left.get();
+        container = this.right.get();
+        if (container instanceof Container && actionable instanceof Actionable) {
+            return !(container.contains(actionable));
+        }
+        return undefined;
+    case Statement.STATEMENTS.not_empty:
+        container = this.left.get();
+        if (container instanceof Container) {
+            return !(container.isEmpty());
+        }
+        return undefined;
+    }
+    return undefined;
+};

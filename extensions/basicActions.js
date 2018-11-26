@@ -1,6 +1,6 @@
 /*jslint devel: true */
 /* eslint-disable no-console */
-/*global Executor, Selector, actionCatalog
+/*global Executor, Selector, actionCatalog, Statement, Substatement
 */
 
 /*
@@ -116,6 +116,7 @@ action.put("destination", new Selector());
 action.map("owner", "source");
 action.map("item", "item");
 action.map("destination", "destination");
+action.addPrecondition(new Statement(new Substatement(action, "item"), new Substatement(action, "source"), Statement.STATEMENTS.is_in));
 
 actionCatalog.addAction("drop", action);
 
@@ -140,6 +141,8 @@ action.put("source", new Selector());
 action.map("owner", "destination");
 action.map("item", "item");
 action.map("source", "source");
+action.addPrecondition(new Statement(new Substatement(action, "item"), new Substatement(action, "destination"), Statement.STATEMENTS.not_in));
+action.addPrecondition(new Statement(new Substatement(action, "source"), new Substatement(""), Statement.STATEMENTS.not_empty));
 
 actionCatalog.addAction("pick", action);
 

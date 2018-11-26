@@ -4,6 +4,7 @@ function SelectorBinder() {
     this.selectors = {};
     this.bindings = {};
     this.maps = {};
+    this.preconditions = [];
 }
 
 // creation
@@ -30,6 +31,18 @@ SelectorBinder.prototype.bind = function (outreference, target) {
     "use strict";
     if (outreference !== undefined) {
         this.bindings[outreference] = target;
+    }
+    return this;
+};
+
+// unbindall
+SelectorBinder.prototype.unbindAll = function () {
+    "use strict";
+    var outreference;
+    for (outreference in this.bindings) {
+        if (this.bindings.hasOwnProperty(outreference)) {
+            this.bindings[outreference] = undefined;
+        }
     }
     return this;
 };
@@ -72,4 +85,51 @@ SelectorBinder.prototype.set = function (inreference, feature_value) {
         }
     }
     return this;
+};
+
+
+SelectorBinder.prototype.getRoles = function () {
+    "use strict";
+    return Object.keys(this.bindings);
+};
+
+SelectorBinder.prototype.addPrecondition = function (precondition) {
+    "use strict";
+    this.preconditions.push(precondition);
+    return this;
+};
+
+SelectorBinder.prototype.getPreconditionRoles = function () {
+    "use strict";
+    var idx, precondition, inRefs, iInRef, outRef, outRefs = [];
+    for (idx in this.preconditions) {
+        if (this.preconditions.hasOwnProperty(idx)) {
+            precondition = this.preconditions[idx];
+            inRefs = precondition.getInReferences();
+            for (iInRef in inRefs) {
+                if (inRefs.hasOwnProperty(iInRef)) {
+                    outRef = this.maps[inRefs[iInRef]];
+                    if (outRef !== undefined) {
+                        if (outRefs.indexOf(outRef) === -1) {
+                            outRefs.push(outRef);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return outRefs;
+};
+
+// assert
+SelectorBinder.prototype.assert = function () {
+    "use strict";
+    var idx, precondition, assertion = true;
+    for (idx in this.preconditions) {
+        if (this.preconditions.hasOwnProperty(idx)) {
+            precondition = this.preconditions[idx];
+            assertion = assertion && precondition.assert();
+        }
+    }
+    return assertion;
 };
