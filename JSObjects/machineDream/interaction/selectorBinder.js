@@ -34,6 +34,17 @@ SelectorBinder.prototype.bind = function (outreference, target) {
     return this;
 };
 
+SelectorBinder.prototype.unbindAll = function () {
+    "use strict";
+    var outreference;
+    for (outreference in this.bindings) {
+        if (this.bindings.hasOwnProperty(outreference)) {
+            this.bindings[outreference] = undefined;
+        }
+    }
+    return this;
+};
+
 // Retrieve Selector: Object itself (Room/Body), Inventory or Feature
 SelectorBinder.prototype.get = function (inreference) {
     "use strict";

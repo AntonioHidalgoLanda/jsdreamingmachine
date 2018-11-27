@@ -35,14 +35,8 @@ and open the template in the editor.
         <script type="text/javascript" src="tests/testExtensionBasicActions.js"></script>
     </head>
     <body>
-        <!-- Player Generator
-        <button onclick="javascript:playerGenerator.autoGenerate();">auto generate random player</button>
-        -->
-        <div id="player-generator-demo"></div>
-        <!-- Player Inspect: Inspect Features, Inspect Collections, Inspect Thoughts -->
-        <div id="player-inspector-demo"></div>
-        <!-- Room View; The java function should load the ROOM/world from a file -->
         <div id="room-viewer-demo"></div>
+        <div id="action-viewer-demo"></div>
         <!-- Game -->
         <div id="game">
             <div id="sidemenu"></div>
@@ -75,14 +69,17 @@ and open the template in the editor.
     </body>
     <!-- // This might go in a different file. We are using a Catolg from test -->
     <script type="text/javascript">
-        var embodimentViewer = new EmbodimentViewer("player-inspector-demo");
+        var embodimentViewer = new EmbodimentViewer("room-viewer-demo");
         var dreamerRoom = new ScenarioDreamer();
         var room;
+        var self;
         dreamerRoom.addEmbodiment("body1", 3, 1, 0.75, 'prototype_basic');
         dreamerRoom.addEmbodiment("collectable", 4, 2, 0.95, 'prototype_energypack');
         room = dreamerRoom.dream();
+        self = room.getEverybody()[0];
+        executorHandler = new ExecutorHandler(self, room);
+        embodimentViewer.setExecutorHandler(executorHandler);
         embodimentViewer.push(room);
-        
         
         console.log("Actionable dreamer catalog:");
         console.log(actionableDreamerCatalog);
@@ -91,13 +88,6 @@ and open the template in the editor.
 //
 // Test Executor handler - This should go to another file
 //
-        console.log("Testing Executor Handler:");
-        console.log("room:");
-        console.log(room);
-        var self = room.getEverybody()[0];
-        console.log("self:");
-        console.log(self);
-        executorHandler = new ExecutorHandler(self, room);
         
         console.log("ExecutorHandler::Funtions:");
         console.log("getAllTargets:");
