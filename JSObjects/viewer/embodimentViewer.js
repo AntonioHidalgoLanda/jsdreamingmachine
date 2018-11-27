@@ -1,28 +1,41 @@
 /*global jQuery, document, Embodiment, Inventory, Container*/
+/*global actionCatalog*/
 
 function EmbodimentViewer(divRootRef) {
     "use strict";
-    this.HEADER_DIV_CLASS = "visualization-header";
-    this.BODY_DIV_CLASS = "visualization-body";
-    this.BACK_DIV_CLASS = "visualization-back";
-    this.SEC1_DIV_CLASS = "visualization-sec1";
-    this.SEC2_DIV_CLASS = "visualization-sec2";
     this.stack = [];
+    this.executerHandler = undefined;
+    this.action = undefined;
     this.divRootRef = divRootRef;
     this.divRoot = jQuery("#" + this.divRootRef)[0];
-    this.divHeader = jQuery("#" + this.divRootRef + " ." + this.HEADER_DIV_CLASS)[0];
-    this.divBody = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS)[0];
-    this.divBack = jQuery("#" + this.divRootRef + " ." + this.BACK_DIV_CLASS)[0];
-    this.divSection1 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC1_DIV_CLASS)[0];
-    this.divSection2 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC2_DIV_CLASS)[0];
+    this.divHeader = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.HEADER_DIV_CLASS)[0];
+    this.divBody = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BODY_DIV_CLASS)[0];
+    this.divActions = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.ACTIONS_DIV_CLASS)[0];
+    this.divBack = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BACK_DIV_CLASS)[0];
+    this.divSection1 = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BODY_DIV_CLASS + " ." + EmbodimentViewer.SEC1_DIV_CLASS)[0];
+    this.divSection2 = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BODY_DIV_CLASS + " ." + EmbodimentViewer.SEC2_DIV_CLASS)[0];
     this.checkHTMLStruct();
 }
+
+EmbodimentViewer.HEADER_DIV_CLASS = "visualization-header";
+EmbodimentViewer.BODY_DIV_CLASS = "visualization-body";
+EmbodimentViewer.BACK_DIV_CLASS = "visualization-back";
+EmbodimentViewer.SEC1_DIV_CLASS = "visualization-sec1";
+EmbodimentViewer.SEC2_DIV_CLASS = "visualization-sec2";
+EmbodimentViewer.ACTIONS_DIV_CLASS = "visualization-actions";
+
 
 var handlerPopIntoViewer = function (that) {
     "use strict";
     return function () {
         that.pop();
     };
+};
+
+EmbodimentViewer.prototype.setExecutorHandler = function (handler) {
+    "use strict";
+    this.executerHandler = handler;
+    return this;
 };
 
 EmbodimentViewer.prototype.checkHTMLStruct = function () {
@@ -32,7 +45,7 @@ EmbodimentViewer.prototype.checkHTMLStruct = function () {
         if (this.stack.length > 1) {
             if (this.divBack === undefined) {
                 div = document.createElement('div');
-                div.className = this.BACK_DIV_CLASS;
+                div.className = EmbodimentViewer.BACK_DIV_CLASS;
                 this.divRoot.append(div);
                 this.divBack = div;
             }
@@ -46,23 +59,27 @@ EmbodimentViewer.prototype.checkHTMLStruct = function () {
                 this.divBack.innerHTML = "";
             }
         }
-        if (this.divHeader === undefined || this.divBody === undefined) {
+        if (this.divHeader === undefined || this.divBody === undefined || this.divActions === undefined) {
             div = document.createElement('div');
-            div.className = this.HEADER_DIV_CLASS;
+            div.className = EmbodimentViewer.HEADER_DIV_CLASS;
             this.divRoot.append(div);
             this.divHeader = div;
             div = document.createElement('div');
-            div.className = this.BODY_DIV_CLASS;
+            div.className = EmbodimentViewer.BODY_DIV_CLASS;
             this.divRoot.append(div);
             this.divBody = div;
+            div = document.createElement('div');
+            div.className = EmbodimentViewer.ACTIONS_DIV_CLASS;
+            this.divRoot.append(div);
+            this.divActions = div;
         }
         if (this.divSection1 === undefined || this.divSection2 === undefined) {
             div = document.createElement('div');
-            div.className = this.SEC1_DIV_CLASS;
+            div.className = EmbodimentViewer.SEC1_DIV_CLASS;
             this.divBody.append(div);
             this.divSection1 = div;
             div = document.createElement('div');
-            div.className = this.SEC2_DIV_CLASS;
+            div.className = EmbodimentViewer.SEC2_DIV_CLASS;
             this.divBody.append(div);
             this.divSection2 = div;
         }
@@ -73,11 +90,12 @@ EmbodimentViewer.prototype.updatedivRootRef = function (divRootRef) {
     "use strict";
     this.divRootRef = divRootRef;
     this.divRoot = jQuery("#" + this.divRootRef);
-    this.divHeader = jQuery("#" + this.divRootRef + " ." + this.HEADER_DIV_CLASS)[0];
-    this.divBody = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS)[0];
-    this.divBack = jQuery("#" + this.divRootRef + " ." + this.BACK_DIV_CLASS)[0];
-    this.divSection1 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC1_DIV_CLASS)[0];
-    this.divSection2 = jQuery("#" + this.divRootRef + " ." + this.BODY_DIV_CLASS + " ." + this.SEC2_DIV_CLASS)[0];
+    this.divHeader = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.HEADER_DIV_CLASS)[0];
+    this.divBody = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BODY_DIV_CLASS)[0];
+    this.divActions = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.ACTIONS_DIV_CLASS)[0];
+    this.divBack = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BACK_DIV_CLASS)[0];
+    this.divSection1 = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BODY_DIV_CLASS + " ." + EmbodimentViewer.SEC1_DIV_CLASS)[0];
+    this.divSection2 = jQuery("#" + this.divRootRef + " ." + EmbodimentViewer.BODY_DIV_CLASS + " ." + EmbodimentViewer.SEC2_DIV_CLASS)[0];
     this.checkHTMLStruct();
     return this;
 };
@@ -252,6 +270,119 @@ EmbodimentViewer.prototype.showInventoryItems = function () {
     return this;
 };
 
+// the use of a function inside of a function is to allos to pass local variables through the function stack.
+var handlerOpenAction = function (that, action) {
+    "use strict";
+    return function () {
+        that.action = action;
+        that.showActions();
+    };
+};
+
+var handlerSubmitAction = function (that) {
+    "use strict";
+    return function () {
+        if (actionCatalog.hasOwnProperty(that.action)) {
+            jQuery("." + EmbodimentViewer.ACTIONS_DIV_CLASS + " :selected").each(function () {
+                actionCatalog[that.action].bind(jQuery(this).data("role"), jQuery(this).data("target"));
+            });
+            actionCatalog[that.action].execute();
+            actionCatalog[that.action].unbindAll();
+        }
+        that.action = undefined;
+        that.show();
+    };
+};
+
+EmbodimentViewer.prototype.showActionDetails = function () {
+    "use strict";
+    var irole, role, roles, targets, itarget, target, option, button, h1, selectList, div;
+    if (this.action === undefined) {
+        return this;
+    }
+    button = document.createElement('button');
+    button.textContent = "back";
+    button.onclick = handlerOpenAction(this, undefined);
+    this.divActions.appendChild(button);
+    h1 = document.createElement('h1');
+    h1.textContent = this.action;
+    this.divActions.appendChild(h1);
+    
+    if (actionCatalog.hasOwnProperty(this.action)) {
+        roles = actionCatalog[this.action].getRoles();
+        for (irole in roles) {
+            if (roles.hasOwnProperty(irole)) {
+                role = roles[irole];
+                if (role === actionCatalog[this.action].callerRef) {
+                    targets = [this.executerHandler.self];
+                } else {
+                    targets = this.executerHandler.getTargetsFor(this.action, role);
+                }
+                div = document.createElement('div');
+                div.textContent = role;
+                this.divActions.appendChild(div);
+                
+                selectList = document.createElement("select");
+                selectList.id = role;
+                div.appendChild(selectList);
+                
+                for (itarget in targets) {
+                    if (targets.hasOwnProperty(itarget)) {
+                        target = targets[itarget];
+                        option = document.createElement("option");
+                        option.value = target.id;
+                        option.text = target.name; // this won't work for containers and inventories
+                        option.id = role + "_" + target.id;
+                        selectList.appendChild(option);
+                        jQuery("#" + option.id).data('target', target);
+                        jQuery("#" + option.id).data('role', role);
+                    }
+                }
+            }
+        }
+                
+        button = document.createElement('button');
+        button.textContent = "submit";
+        button.onclick = handlerSubmitAction(this);
+        this.divActions.appendChild(button);
+    }
+
+};
+
+EmbodimentViewer.prototype.showActionPicker = function () {
+    "use strict";
+    var current, actions, idx, action, button;
+    current = this.current();
+    if (current !== this.executerHandler.room && current !== this.executerHandler.self) {
+        actions = this.executerHandler.getActions(current);
+    } else {
+        actions = this.executerHandler.getActions();
+    }
+    for (idx in actions) {
+        if (actions.hasOwnProperty(idx)) {
+            action = actions[idx];
+            button = document.createElement('button');
+            button.textContent = action;
+            button.onclick = handlerOpenAction(this, action);
+            this.divActions.appendChild(button);
+        }
+    }
+    return this;
+};
+
+EmbodimentViewer.prototype.showActions = function () {
+    "use strict";
+    this.divActions.innerHTML = "";
+    if (this.executerHandler !== undefined) {
+        if (this.action !== undefined) {
+            this.showActionDetails();
+        } else {
+            this.showActionPicker();
+        }
+    }
+    return this;
+};
+
 EmbodimentViewer.prototype.show = function () {
     "use strict";
     this.checkHTMLStruct();
@@ -259,6 +390,8 @@ EmbodimentViewer.prototype.show = function () {
     this.showFeatures();
     this.showInventories();
     this.showInventoryItems();
+    this.showActions();
     
     return this;
 };
+
