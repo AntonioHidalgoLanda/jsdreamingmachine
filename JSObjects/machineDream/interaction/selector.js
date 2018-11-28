@@ -1,4 +1,4 @@
-
+/*global Actionable, Container, Embodiment, Collectable, Inventory*/
 function Selector(subtype, refId) {
     "use strict";
     this.subtype = subtype;
@@ -25,6 +25,20 @@ Selector.prototype.get = function (embodiment) {
         } else {
             return undefined;
         }
+    } else if (this.subtype !== undefined) {
+        switch (this.subtype.toLowerCase()) {
+        case "actionable":
+            return (embodiment instanceof Actionable) ? embodiment : undefined;
+        case "embodiment":
+            return (embodiment instanceof Embodiment) ? embodiment : undefined;
+        case "collectable":
+            return (embodiment instanceof Collectable) ? embodiment : undefined;
+        case "container":
+            return (embodiment instanceof Container) ? embodiment : undefined;
+        case "inventory":
+            return (embodiment instanceof Inventory) ? embodiment : undefined;
+        }
+               
     }
     return embodiment;
 };

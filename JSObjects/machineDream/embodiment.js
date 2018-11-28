@@ -29,6 +29,10 @@ Embodiment.prototype.setName = function (name) {
     return this;
 };
 
+Embodiment.prototype.getName = function () {
+    return this.name;
+};
+
 Embodiment.prototype.setDescription = function (description) {
     this.description = description;
     return this;
@@ -54,10 +58,12 @@ Embodiment.prototype.getPortraitID = function () {
 Embodiment.prototype.createInventory = function (name, maxWeight, maxSize) {
     if (!this.inventories.hasOwnProperty(name)) {
         this.inventories[name] = new Inventory(maxWeight, maxSize);
+        this.inventories[name].setName(name);
     } else {
         this.inventories[name]
                 .setMaxWeight(maxWeight)
-                .setMaxSize(maxSize);
+                .setMaxSize(maxSize)
+                .setName(name);
     }
     return this;
 };

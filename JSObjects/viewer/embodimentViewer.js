@@ -301,7 +301,7 @@ var handlerSelectTarget = function (that) {
         if (that.executerHandler instanceof ExecutorHandler) {
             self = that.executerHandler.self;
         }
-        if (that.action !== undefined && current !== undefined && self !== undefined && self !== current) {
+        if (that.action !== undefined && current !== undefined && self !== undefined && self !== current && current !== that.room) {
             // get all the the targets
             // check if any target is current
             bSelected = false;
@@ -320,10 +320,11 @@ var handlerSelectTarget = function (that) {
 
 EmbodimentViewer.prototype.showActionDetails = function () {
     "use strict";
-    var irole, role, roles, targets, itarget, target, option, button, h1, selectList, div;
+    var irole, role, roles, targets, itarget, target, option, button, h1, selectList, div, current;
     if (this.action === undefined) {
         return this;
     }
+    current = this.current();
     button = document.createElement('button');
     button.textContent = "back";
     button.onclick = handlerOpenAction(this, undefined);
@@ -356,8 +357,11 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                         target = targets[itarget];
                         option = document.createElement("option");
                         option.value = target.id;
-                        option.text = target.name; // this won't work for containers and inventories
+                        option.text = target.getName(); // this won't work for containers and inventories
                         option.id = role + "_" + target.id;
+                        if (current !== this.self && current !== this.room && current.id === target.id) {
+                            option.selected = true;
+                        }
                         selectList.appendChild(option);
                         jQuery("#" + option.id).data('target', target);
                         jQuery("#" + option.id).data('role', role);

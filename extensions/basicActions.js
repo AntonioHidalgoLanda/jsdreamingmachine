@@ -109,8 +109,8 @@ action = new Executor(executeMove);
 action.setCaller("owner");
 //action.put(inreference, selector);
 action.put("source", new Selector("inventory", "Belongings"));
-action.put("item", new Selector());
-action.put("destination", new Selector());
+action.put("item", new Selector("collectable"));
+action.put("destination", new Selector("container"));
 
 //action.map(outreference, inreference);
 action.map("owner", "source");
@@ -133,8 +133,8 @@ action = new Executor(executeMove);
 action.setCaller("owner");
 //action.put(inreference, selector);
 action.put("destination", new Selector("inventory", "Belongings"));
-action.put("item", new Selector());
-action.put("source", new Selector());
+action.put("item", new Selector("collectable"));
+action.put("source", new Selector("container"));
 
 //action.map(outreference, inreference);
 action.map("owner", "destination");
@@ -163,7 +163,7 @@ action = new Executor(function (action) {
 });
 //action.put(inreference, selector);
 action.put("source", new Selector("inventory", "Belongings"));
-action.put("item", new Selector());
+action.put("item", new Selector("collectable"));
 
 //action.map(outreference, inreference);
 action.map("owner", "source");
@@ -188,7 +188,7 @@ action.put("target", new Selector("feature", "life"));
 action.put("cap", new Selector("feature", "max_life"));
 action.put("increase", new Selector("feature", "heal"));
 action.put("source", new Selector("inventory", "Belongings"));
-action.put("item", new Selector());
+action.put("item", new Selector("collectable"));
 
 //action.map(outreference, inreference);
 action.map("owner", "target");
@@ -214,7 +214,7 @@ action.put("target", new Selector("feature", "energy"));
 action.put("cap", new Selector("feature", "max_energy"));
 action.put("increase", new Selector("feature", "restoring"));
 action.put("source", new Selector("inventory", "Belongings"));
-action.put("item", new Selector());
+action.put("item", new Selector("collectable"));
 
 //action.map(outreference, inreference);
 action.map("owner", "target");
