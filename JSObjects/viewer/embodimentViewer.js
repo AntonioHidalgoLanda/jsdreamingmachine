@@ -1,4 +1,4 @@
-/*global jQuery, document, Embodiment, Inventory, Container*/
+/*global jQuery, document, Embodiment, Inventory, Container, ExecutorHandler*/
 /*global actionCatalog*/
 
 function EmbodimentViewer(divRootRef) {
@@ -294,6 +294,30 @@ var handlerSubmitAction = function (that) {
     };
 };
 
+var handlerSelectTarget = function (that) {
+    "use strict";
+    return function () {
+        var current = that.current(), self, bSelected, role = this.id;
+        if (that.executerHandler instanceof ExecutorHandler) {
+            self = that.executerHandler.self;
+        }
+        if (that.action !== undefined && current !== undefined && self !== undefined && self !== current) {
+            // get all the the targets
+            // check if any target is current
+            bSelected = false;
+            jQuery("." + EmbodimentViewer.ACTIONS_DIV_CLASS + " :selected").each(function () {
+                if (jQuery(this).val() === current.id) {
+                    bSelected = true;
+                }
+            });
+            // if not, check if can be selected in this taret
+            if (!bSelected && actionCatalog.hasOwnProperty(that.action) && actionCatalog[that.action].canBind(role, current)) {
+                this.value = current.id;
+            }
+        }
+    };
+};
+
 EmbodimentViewer.prototype.showActionDetails = function () {
     "use strict";
     var irole, role, roles, targets, itarget, target, option, button, h1, selectList, div;
@@ -324,6 +348,7 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                 
                 selectList = document.createElement("select");
                 selectList.id = role;
+                selectList.onchange = handlerSelectTarget(this);
                 div.appendChild(selectList);
                 
                 for (itarget in targets) {
