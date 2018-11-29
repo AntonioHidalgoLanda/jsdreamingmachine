@@ -19,6 +19,23 @@ Container.prototype.getEverybody = function () {
     return this.collectables;
 };
 
+Container.prototype.getID = function() {
+    "use strict";
+    if (!this.hasOwnProperty("id")) {
+        // Public Domain/MIT
+        var d = new Date().getTime();
+        if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+            d += performance.now(); //use high-precision timer if available
+        }
+        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    }
+    return this.id;
+};
+
 Container.prototype.contains = function(actionable) {
     var idx = this.collectables.indexOf(actionable);
     return (idx > -1);

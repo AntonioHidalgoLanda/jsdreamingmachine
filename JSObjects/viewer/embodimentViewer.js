@@ -292,7 +292,9 @@ var handlerSubmitAction = function (that) {
     return function () {
         if (actionCatalog.hasOwnProperty(that.action)) {
             jQuery("." + EmbodimentViewer.ACTIONS_DIV_CLASS + " :selected").each(function () {
-                actionCatalog[that.action].bind(jQuery(this).data("role"), jQuery(this).data("target"));
+                var role = jQuery(this).data("role"),
+                    target = jQuery(this).data("target");
+                actionCatalog[that.action].bind(role, target);
             });
             actionCatalog[that.action].execute();
             actionCatalog[that.action].unbindAll();
@@ -364,7 +366,7 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                     if (targets.hasOwnProperty(itarget)) {
                         target = targets[itarget];
                         option = document.createElement("option");
-                        option.value = target.id;
+                        option.value = target.getID();
                         option.text = target.getName();
                         if (target === this.self) {
                             option.text += EmbodimentViewer.TAG_SELF;
