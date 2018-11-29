@@ -24,6 +24,8 @@ EmbodimentViewer.SEC1_DIV_CLASS = "visualization-sec1";
 EmbodimentViewer.SEC2_DIV_CLASS = "visualization-sec2";
 EmbodimentViewer.ACTIONS_DIV_CLASS = "visualization-actions";
 
+EmbodimentViewer.TAG_SELF = " (me)";
+
 
 var handlerPopIntoViewer = function (that) {
     "use strict";
@@ -233,7 +235,13 @@ EmbodimentViewer.prototype.showInventories = function () {
 
 EmbodimentViewer.prototype.showInventoryItemHeader = function (item) {
     "use strict";
-    return item.name;
+    var name = item.getName();
+    
+    if (this.executerHandler instanceof ExecutorHandler && item === this.executerHandler.self) {
+        name += EmbodimentViewer.TAG_SELF;
+    }
+    return name;
+    
 };
 
 // TODO, work with an additional section instead
@@ -357,7 +365,10 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                         target = targets[itarget];
                         option = document.createElement("option");
                         option.value = target.id;
-                        option.text = target.getName(); // this won't work for containers and inventories
+                        option.text = target.getName();
+                        if (target === this.self) {
+                            option.text += EmbodimentViewer.TAG_SELF;
+                        }
                         option.id = role + "_" + target.id;
                         if (current !== this.self && current !== this.room && current.id === target.id) {
                             option.selected = true;
