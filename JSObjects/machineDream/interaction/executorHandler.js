@@ -30,9 +30,11 @@ ExecutorHandler.prototype.getAllTargets = function () {
     "use strict";
     var allTargets = [], inventory;
     // allTargets.push(this.self); it is already in the room. otherwise we will introduce duplicates
+    allTargets.push(this.room);
     allTargets.push.apply(allTargets, this.room.getEverybody());
     if (this.self.hasOwnProperty("inventories")) {
         inventory = this.self.getInventory(this.inventoryRef);
+        allTargets.push(inventory);
         if (inventory !== null) {
             allTargets.push.apply(allTargets, inventory.getEverybody());
         }

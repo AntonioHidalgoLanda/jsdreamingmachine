@@ -10,6 +10,10 @@ function Container () {
 }
 
 
+Container.prototype.getName = function() {
+    return (this.hasOwnProperty("name")) ? this.name : "container";
+}
+
 Container.prototype.getEverybody = function () {
     "use strict";
     return this.collectables;

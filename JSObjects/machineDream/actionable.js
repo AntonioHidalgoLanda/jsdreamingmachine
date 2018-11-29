@@ -14,6 +14,10 @@ function Actionable () {
     
 }
 
+Actionable.prototype.getName = function() {
+    return "unknown-"+this.id;
+}
+
 Actionable.prototype.setID = function(id) {
     this.id = id;
     return this;

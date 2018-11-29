@@ -1,4 +1,4 @@
-/*global jQuery, document, Embodiment, Inventory, Container*/
+/*global jQuery, document, Embodiment, Inventory, Container, ExecutorHandler*/
 /*global actionCatalog*/
 
 function EmbodimentViewer(divRootRef) {
@@ -23,6 +23,8 @@ EmbodimentViewer.BACK_DIV_CLASS = "visualization-back";
 EmbodimentViewer.SEC1_DIV_CLASS = "visualization-sec1";
 EmbodimentViewer.SEC2_DIV_CLASS = "visualization-sec2";
 EmbodimentViewer.ACTIONS_DIV_CLASS = "visualization-actions";
+
+EmbodimentViewer.TAG_SELF = " (me)";
 
 
 var handlerPopIntoViewer = function (that) {
@@ -233,7 +235,13 @@ EmbodimentViewer.prototype.showInventories = function () {
 
 EmbodimentViewer.prototype.showInventoryItemHeader = function (item) {
     "use strict";
-    return item.name;
+    var name = item.getName();
+    
+    if (this.executerHandler instanceof ExecutorHandler && item === this.executerHandler.self) {
+        name += EmbodimentViewer.TAG_SELF;
+    }
+    return name;
+    
 };
 
 // TODO, work with an additional section instead
@@ -294,12 +302,37 @@ var handlerSubmitAction = function (that) {
     };
 };
 
+var handlerSelectTarget = function (that) {
+    "use strict";
+    return function () {
+        var current = that.current(), self, bSelected, role = this.id;
+        if (that.executerHandler instanceof ExecutorHandler) {
+            self = that.executerHandler.self;
+        }
+        if (that.action !== undefined && current !== undefined && self !== undefined && self !== current && current !== that.room) {
+            // get all the the targets
+            // check if any target is current
+            bSelected = false;
+            jQuery("." + EmbodimentViewer.ACTIONS_DIV_CLASS + " :selected").each(function () {
+                if (jQuery(this).val() === current.id) {
+                    bSelected = true;
+                }
+            });
+            // if not, check if can be selected in this taret
+            if (!bSelected && actionCatalog.hasOwnProperty(that.action) && actionCatalog[that.action].canBind(role, current)) {
+                this.value = current.id;
+            }
+        }
+    };
+};
+
 EmbodimentViewer.prototype.showActionDetails = function () {
     "use strict";
-    var irole, role, roles, targets, itarget, target, option, button, h1, selectList, div;
+    var irole, role, roles, targets, itarget, target, option, button, h1, selectList, div, current;
     if (this.action === undefined) {
         return this;
     }
+    current = this.current();
     button = document.createElement('button');
     button.textContent = "back";
     button.onclick = handlerOpenAction(this, undefined);
@@ -324,6 +357,7 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                 
                 selectList = document.createElement("select");
                 selectList.id = role;
+                selectList.onchange = handlerSelectTarget(this);
                 div.appendChild(selectList);
                 
                 for (itarget in targets) {
@@ -331,8 +365,14 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                         target = targets[itarget];
                         option = document.createElement("option");
                         option.value = target.id;
-                        option.text = target.name; // this won't work for containers and inventories
+                        option.text = target.getName();
+                        if (target === this.self) {
+                            option.text += EmbodimentViewer.TAG_SELF;
+                        }
                         option.id = role + "_" + target.id;
+                        if (current !== this.self && current !== this.room && current.id === target.id) {
+                            option.selected = true;
+                        }
                         selectList.appendChild(option);
                         jQuery("#" + option.id).data('target', target);
                         jQuery("#" + option.id).data('role', role);

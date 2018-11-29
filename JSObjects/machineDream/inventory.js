@@ -15,6 +15,16 @@ function Inventory (maxWeight,maxSize) {
     this.totalSize = 0;
 }
 
+Inventory.prototype.getName = function() {
+    return (this.hasOwnProperty("name")) ? this.name : "inventory";
+}
+
+
+Inventory.prototype.setName = function(name) {
+    this.name = name;
+    return this;
+};
+
 Inventory.prototype.getTotalWeight = function() {return this.totalWeight;};
 Inventory.prototype.getTotalSize = function() {return this.totalSize;};
 Inventory.prototype.getMaxWeight = function() {return this.maxWeight;};
@@ -102,6 +112,9 @@ Inventory.prototype.parseObject = function(obj) {
     }
     if ('totalSize' in obj){
         this.totalSize = obj.totalSize;
+    }
+    if ('name' in obj){
+        this.name = obj.name;
     }
     return this;
 };
