@@ -73,9 +73,10 @@ and open the template in the editor.
         var dreamerRoom = new ScenarioDreamer();
         var room;
         var self;
-        dreamerRoom.addEmbodiment("body1", 3, 1, 0.75, 'prototype_basic');
+        dreamerRoom.addEmbodiment("body1", 1, 1, 0.75, 'prototype_basic');
         dreamerRoom.addEmbodiment("collectable", 4, 2, 0.95, 'prototype_energypack');
         room = dreamerRoom.dream();
+        room.name = "room";
         self = actionableDreamerCatalog.dream('prototype_basic');
         room.push(self);
         executorHandler = new ExecutorHandler(self, room);
