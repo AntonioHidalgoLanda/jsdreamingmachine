@@ -380,6 +380,9 @@ EmbodimentViewer.prototype.showActionDetails = function () {
                         jQuery("#" + option.id).data('role', role);
                     }
                 }
+                if (targets.length === 1) {
+                    div.hidden = true;
+                }
             }
         }
                 
