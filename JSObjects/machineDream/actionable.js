@@ -1,79 +1,48 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*global MasterObject, Actionable*/
 
+Actionable.prototype = new MasterObject();
+Actionable.prototype.constructor = Actionable;
 
-
-function Actionable () {
-    this.id = generateUUID();
+function Actionable() {
+    "use strict";
+    MasterObject.call(this);
     this.features = {};
-    // TODO
-    //this.roles;
-    
 }
 
-Actionable.prototype.getName = function() {
-    return "unknown-"+this.id;
-}
-
-Actionable.prototype.setID = function(id) {
-    this.id = id;
-    return this;
+Actionable.prototype.getName = function () {
+    "use strict";
+    return (this.name === undefined) ? "unknown -" + this.id : this.name;
 };
 
-Actionable.prototype.getID = function() {
-    return this.id;
-};
-
-Actionable.prototype.deleteFeature = function(feature) {
+Actionable.prototype.deleteFeature = function (feature) {
+    "use strict";
     delete this.features[feature];
     return this;
 };
 
-Actionable.prototype.setFeature = function(feature, value) {
+Actionable.prototype.setFeature = function (feature, value) {
+    "use strict";
     this.features[feature] = value;
     return this;
 };
 
-Actionable.prototype.getFeature = function(feature) {
+Actionable.prototype.getFeature = function (feature) {
+    "use strict";
     return this.features[feature];
 };
- 
-Actionable.prototype.serializeJSON = function() {
-    return JSON.stringify(this);
-};
 
-Actionable.prototype.parseObject = function(obj, bKeepID) {
-    if ('id' in obj && bKeepID === undefined){
-        this.id = obj.id;
-    }
-    if ('features' in obj){
-        for (var feature in obj.features){
-            this.setFeature(feature,obj.features[feature]);
+Actionable.prototype.parseObject = function (obj, bKeepID) {
+    "use strict";
+    var feature;
+    MasterObject.prototype.parseObject.call(this, obj, bKeepID);
+    if (obj.hasOwnProperty('features')) {
+        for (feature in obj.features) {
+            if (obj.features.hasOwnProperty(feature)) {
+                this.setFeature(feature, obj.features[feature]);
+            }
         }
     }
     return this;
 };
 
-Actionable.prototype.deserializeJSON = function(json, bKeepID) {
-    var obj_from_json = JSON.parse( json );
-    if ( Array.isArray(obj_from_json)){
-        obj_from_json = obj_from_json[1];
-    }
-    return this.parseObject(obj_from_json, bKeepID);
-};
-
-function generateUUID () { // Public Domain/MIT
-    var d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-        d += performance.now(); //use high-precision timer if available
-    }
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-}
 

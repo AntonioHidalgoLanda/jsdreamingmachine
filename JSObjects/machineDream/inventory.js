@@ -19,12 +19,6 @@ Inventory.prototype.getName = function() {
     return (this.hasOwnProperty("name")) ? this.name : "inventory";
 }
 
-
-Inventory.prototype.setName = function(name) {
-    this.name = name;
-    return this;
-};
-
 Inventory.prototype.getTotalWeight = function() {return this.totalWeight;};
 Inventory.prototype.getTotalSize = function() {return this.totalSize;};
 Inventory.prototype.getMaxWeight = function() {return this.maxWeight;};
