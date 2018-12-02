@@ -72,15 +72,14 @@ and open the template in the editor.
     <!-- // This might go in a different file. We are using a Catolg from test -->
     <script type="text/javascript">
         var embodimentViewer = new EmbodimentViewer("room-viewer-demo");
-        var dreamerRoom = new ScenarioDreamer();
         var room;
         var self;
-        dreamerRoom.addEmbodiment("body1", 1, 1, 0.75, 'prototype_basic');
-        dreamerRoom.addEmbodiment("collectable", 4, 2, 0.95, 'prototype_energypack');
-        room = dreamerRoom.dream();
-        room.name = "room";
+        var gate = new Gate("door");
+        room = actionableDreamerCatalog.dream('prototype_room_basic');
+        gate.setScenarios(room, 'prototype_room_basic');
         self = actionableDreamerCatalog.dream('prototype_basic');
         room.push(self);
+        room.push(gate);
         executorHandler = new ExecutorHandler(self, room);
         embodimentViewer.setExecutorHandler(executorHandler);
         embodimentViewer.push(room);

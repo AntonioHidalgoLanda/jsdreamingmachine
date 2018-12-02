@@ -7,6 +7,7 @@ function MasterObject() {
     this.id = MasterObject.generateUUID();
     this.name = undefined;
     this.portraitID = undefined;
+    this.description = undefined;
     this.background = undefined;
     
 }
@@ -43,6 +44,12 @@ MasterObject.prototype.setPortraitID = function (portraitID) {
     return this;
 };
 
+MasterObject.prototype.setBackground = function (background) {
+    "use strict";
+    this.background = background;
+    return this;
+};
+
 MasterObject.prototype.getDescription = function () {
     "use strict";
     return this.description;
@@ -51,6 +58,11 @@ MasterObject.prototype.getDescription = function () {
 MasterObject.prototype.getPortraitID = function () {
     "use strict";
     return this.portraitID;
+};
+
+MasterObject.prototype.getBackground = function () {
+    "use strict";
+    return this.background;
 };
  
 MasterObject.prototype.serializeJSON = function () {

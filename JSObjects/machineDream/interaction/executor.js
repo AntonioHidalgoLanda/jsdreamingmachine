@@ -106,9 +106,9 @@ Executor.prototype.setCaller = function (caller) {
     return this;
 };
 
-Executor.prototype.execute = function () {
+Executor.prototype.execute = function (viewer) {
     "use strict";
-    this.fExecute(this);
+    this.fExecute(this, viewer);
     return this;
 };
 

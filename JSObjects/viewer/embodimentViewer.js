@@ -1,4 +1,4 @@
-/*global jQuery, document, Embodiment, Inventory, Container, ExecutorHandler*/
+/*global jQuery, document, Inventory, Container, ExecutorHandler*/
 /*global actionCatalog*/
 
 function EmbodimentViewer(divRootRef) {
@@ -108,6 +108,13 @@ EmbodimentViewer.prototype.push = function (embodiment) {
     this.show();
 };
 
+EmbodimentViewer.prototype.rebase = function (embodiment) {
+    "use strict";
+    this.stack.length = 0;
+    this.stack.push(embodiment);
+    this.show();
+};
+
 EmbodimentViewer.prototype.pop = function () {
     "use strict";
     this.stack.pop();
@@ -132,12 +139,11 @@ EmbodimentViewer.prototype.showEmbodimentHeader = function () {
         this.divHeader.innerHTML = "";
         return this;
     }
+    
+    innerHTML += "name: " + current.getName() + "</br>" + "description: " + current.getDescription() + "</br>" + "PortraitID: " + current.getPortraitID() + "</br>";
+    
     if (current instanceof Inventory) {
         innerHTML += "weight: " + current.totalWeight + "/" + current.maxWeight + "</br>" + "size: " + current.totalSize + "/" + current.maxSize + "</br>";
-    }
-    
-    if (current instanceof Embodiment) {
-        innerHTML += "name: " + current.getName() + "</br>" + "description: " + current.getDescription() + "</br>" + "PortraitID: " + current.getPortraitID() + "</br>";
     }
     
     if (current.hasOwnProperty('weight')) {
@@ -296,7 +302,7 @@ var handlerSubmitAction = function (that) {
                     target = jQuery(this).data("target");
                 actionCatalog[that.action].bind(role, target);
             });
-            actionCatalog[that.action].execute();
+            actionCatalog[that.action].execute(that);
             actionCatalog[that.action].unbindAll();
         }
         that.action = undefined;
