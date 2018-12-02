@@ -106,5 +106,9 @@ MasterObject.isSerializedObjectAnCollectable = function (subObj) {
 MasterObject.isSerializedObjectAnEmbodiment = function (subObj) {
     "use strict";
     return subObj.hasOwnProperty('inventories');
-    
+};
+
+MasterObject.isSerializedObjectAGate = function (subObj) {
+    "use strict";
+    return subObj.hasOwnProperty('scenario1') || subObj.hasOwnProperty('scenario2');
 };
