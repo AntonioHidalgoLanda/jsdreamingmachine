@@ -46,7 +46,3 @@ Collectable.prototype.parseObject = function(obj, bKeepID) {
     }
     return this;
 };
-
-Collectable.prototype.serializeJSON = function() {
-    return JSON.stringify(this);
-};

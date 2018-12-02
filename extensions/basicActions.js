@@ -226,7 +226,31 @@ action.map("item", "item");
 actionCatalog.addAction("consume_restore", action);
 
 
-// move to room
+/*
+Action - cross gate
+Description: Recover energy
+use:
+     actionCatalog.consume_restore.bind("traveller", npc);  //non  playable character
+     actionCatalog.consume_restore.bind("gate", gate);
+     actionCatalog.consume_restore.execute();
+*/
+action = new Executor(function (action, viewer) {
+    "use strict";
+    var traveller = action.get("traveller"),
+        gate = action.get("gate");
+    
+    gate.cross(traveller, viewer);
+});
+action.setCaller("traveller");
+//action.put(inreference, selector);
+action.put("gate", new Selector("gate"));
+action.put("traveller", new Selector("actionable"));
+
+//action.map(outreference, inreference);
+action.map("gate", "gate");
+action.map("traveller", "traveller");
+
+actionCatalog.addAction("cross_gate", action);
 // lock door
 // open door
 

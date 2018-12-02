@@ -1,5 +1,5 @@
 /*exported actionableDreamerCatalog*/
-/*global Collectable, Embodiment, Scenario*/
+/*global Collectable, Embodiment, Scenario, ActionableDreamer*/
 
 /* TODO Separate Statistical functions in a different file */
 var stat_deviate = function (average, deviation) {
@@ -60,6 +60,19 @@ ScenarioDreamer.prototype.dream = function () {
                 }
             }
         }
+    }
+    
+    if (this.names !== undefined && this.names instanceof Array) {
+        room.setName(ActionableDreamer.getRandomValue(this.names));
+    }
+    if (this.descriptions !== undefined && this.descriptions instanceof Array) {
+        room.setDescription(ActionableDreamer.getRandomValue(this.descriptions));
+    }
+    if (this.portraitIDs !== undefined && this.portraitIDs instanceof Array) {
+        room.setPortraitID(ActionableDreamer.getRandomValue(this.portraitIDs));
+    }
+    if (this.backgrounds !== undefined && this.backgrounds instanceof Array) {
+        room.setBackground(ActionableDreamer.getRandomValue(this.backgrounds));
     }
     return room;
 };
@@ -122,7 +135,7 @@ ActionableDreamer.prototype.addItemToInventory = function (inventoryName, collec
     return this;
 };
 
-ActionableDreamer.prototype.getRandomValue = function (values) {
+ActionableDreamer.getRandomValue = function (values) {
     "use strict";
     var random_number = Math.random() * (values.length - 0.001);
     if (values.length <= 0 || values === undefined) {
@@ -136,9 +149,9 @@ ActionableDreamer.prototype.dream = function () {
     "use strict";
     var actionable, name, description, weight, size, portraitID, feature, value, inventory, iSize, iWeight, content;
     // REFACTORING - Entity Creation
-    name = this.getRandomValue(this.names);
-    description = this.getRandomValue(this.descriptions);
-    portraitID = this.getRandomValue(this.portraitIDs);
+    name = ActionableDreamer.getRandomValue(this.names);
+    description = ActionableDreamer.getRandomValue(this.descriptions);
+    portraitID = ActionableDreamer.getRandomValue(this.portraitIDs);
     if (this.hasOwnProperty('weight') || this.hasOwnProperty('size')) {
         weight = (this.hasOwnProperty('weight')) ? this.weight : 0;
         size = (this.hasOwnProperty('size')) ? this.size : 0;

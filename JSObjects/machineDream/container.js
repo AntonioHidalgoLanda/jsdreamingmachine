@@ -1,4 +1,4 @@
-/*global MasterObject, Container, Actionable, Embodiment, Collectable*/
+/*global MasterObject, Container, Actionable, Embodiment, Collectable, Gate*/
 
 Container.prototype = new MasterObject();
 Container.prototype.constructor = Container;
@@ -88,6 +88,8 @@ Container.prototype.parseObject = function (obj, bKeepID) {
             subObj = obj.collectables[idx];
             if (MasterObject.isSerializedObjectAnCollectable(subObj)) {
                 actionable = new Collectable();
+            } else if (MasterObject.isSerializedObjectAGate(subObj)) {
+                actionable = new Gate();
             } else if (MasterObject.isSerializedObjectAnEmbodiment(subObj)) {
                 actionable = new Embodiment();
             } else {

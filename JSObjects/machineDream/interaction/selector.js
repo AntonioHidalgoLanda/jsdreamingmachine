@@ -1,4 +1,4 @@
-/*global Actionable, Container, Embodiment, Collectable, Inventory*/
+/*global Actionable, Container, Embodiment, Collectable, Inventory, Gate*/
 function Selector(subtype, refId) {
     "use strict";
     this.subtype = subtype;
@@ -37,6 +37,8 @@ Selector.prototype.get = function (embodiment) {
             return (embodiment instanceof Container) ? embodiment : undefined;
         case "inventory":
             return (embodiment instanceof Inventory) ? embodiment : undefined;
+        case "gate":
+            return (embodiment instanceof Gate) ? embodiment : undefined;
         }
                
     }
