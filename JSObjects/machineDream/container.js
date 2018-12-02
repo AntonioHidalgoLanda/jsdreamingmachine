@@ -1,69 +1,59 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*global MasterObject, Container, Actionable, Embodiment, Collectable*/
 
+Container.prototype = new MasterObject();
+Container.prototype.constructor = Container;
 
-function Container () {
+function Container() {
+    "use strict";
+    MasterObject.call(this);
     this.collectables = [];
 }
 
 
-Container.prototype.getName = function() {
+Container.prototype.getName = function () {
+    "use strict";
     return (this.hasOwnProperty("name")) ? this.name : "container";
-}
+};
 
 Container.prototype.getEverybody = function () {
     "use strict";
     return this.collectables;
 };
 
-Container.prototype.getID = function() {
+Container.prototype.contains = function (actionable) {
     "use strict";
-    if (!this.hasOwnProperty("id")) {
-        // Public Domain/MIT
-        var d = new Date().getTime();
-        if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-            d += performance.now(); //use high-precision timer if available
-        }
-        this.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-    }
-    return this.id;
-};
-
-Container.prototype.contains = function(actionable) {
     var idx = this.collectables.indexOf(actionable);
     return (idx > -1);
 };
 
-Container.prototype.push = function(actionable) {
+Container.prototype.push = function (actionable) {
+    "use strict";
     if (!this.contains(actionable)) {
         this.collectables.push(actionable);
     }
     return this;
 };
 
-Container.prototype.remove = function(actionable) {
+Container.prototype.remove = function (actionable) {
+    "use strict";
     var idx = this.collectables.indexOf(actionable);
     if (idx > -1) {
-        this.collectables.splice(idx,1);
+        this.collectables.splice(idx, 1);
     }
     return this;
 };
 
-Container.prototype.clear = function() {
+Container.prototype.clear = function () {
+    "use strict";
     this.collectables.length = 0;
     return this;
 };
 
-Container.prototype.merge = function(container) {
-    if (container instanceof Container){
-        for (var c in container.collectables) {
+Container.prototype.merge = function (container) {
+    "use strict";
+    var c;
+    if (container instanceof Container) {
+        for (c in container.collectables) {
             this.push(container.collectables[c]);
         }
     }
@@ -71,9 +61,11 @@ Container.prototype.merge = function(container) {
 };
 
 // @deprecated
-Container.prototype.transferFrom = function(container) {
-    if (container instanceof Container){
-        for (var c in container.collectables) {
+Container.prototype.transferFrom = function (container) {
+    "use strict";
+    var c;
+    if (container instanceof Container) {
+        for (c in container.collectables) {
             this.push(container.collectables[c]);
             container.remove(container.collectables[c]);
         }
@@ -81,31 +73,30 @@ Container.prototype.transferFrom = function(container) {
     return this;
 };
 
-Container.prototype.isEmpty = function() {
+Container.prototype.isEmpty = function () {
+    "use strict";
     return (this.collectables.length === 0);
 };
 
-Container.prototype.serializeJSON = function() {
-    return JSON.stringify(this);
-};
-
-Container.prototype.parseObject = function(obj) {
-    if ('collectables' in obj && Array.isArray(obj.collectables)){
+Container.prototype.parseObject = function (obj, bKeepID) {
+    "use strict";
+    var idx, actionable, subObj;
+    MasterObject.prototype.parseObject.call(this, obj, bKeepID);
+    if (obj.hasOwnProperty('collectables') && Array.isArray(obj.collectables)) {
         this.clear();
-        for (var idx in obj.collectables){
-            var actionable = new Actionable();
-            actionable.parseObject(obj.collectables[idx]);
+        for (idx in obj.collectables) {
+            subObj = obj.collectables[idx];
+            if (MasterObject.isSerializedObjectAnCollectable(subObj)) {
+                actionable = new Collectable();
+            } else if (MasterObject.isSerializedObjectAnEmbodiment(subObj)) {
+                actionable = new Embodiment();
+            } else {
+                actionable = new Actionable();
+            }
+            actionable.parseObject(subObj);
             this.push(actionable);
         }
     }
     return this;
 };
 
-Container.prototype.deserializeJSON = function(json) {
-    var obj_from_json = JSON.parse( json );
-    if ( Array.isArray(obj_from_json)){
-        obj_from_json = obj_from_json[1];
-    }
-    
-    return this.parseObject(obj_from_json);
-};

@@ -24,37 +24,6 @@ function Embodiment(name, description, portraitID) {
     this.inventories = {};
 }
 
-Embodiment.prototype.setName = function (name) {
-    this.name = name;
-    return this;
-};
-
-Embodiment.prototype.getName = function () {
-    return this.name;
-};
-
-Embodiment.prototype.setDescription = function (description) {
-    this.description = description;
-    return this;
-};
-
-Embodiment.prototype.setPortraitID = function (portraitID) {
-    this.portraitID = portraitID;
-    return this;
-};
-
-Embodiment.prototype.getName = function () {
-    return this.name;
-};
-
-Embodiment.prototype.getDescription = function () {
-    return this.description;
-};
-
-Embodiment.prototype.getPortraitID = function () {
-    return this.portraitID;
-};
-
 Embodiment.prototype.createInventory = function (name, maxWeight, maxSize) {
     if (!this.inventories.hasOwnProperty(name)) {
         this.inventories[name] = new Inventory(maxWeight, maxSize);
@@ -83,15 +52,6 @@ Embodiment.prototype.getInventory = function (name) {
 
 Embodiment.prototype.parseObject = function (obj, bKeepID) {
     Actionable.prototype.parseObject.call(this, obj, bKeepID);
-    if ("name" in obj) {
-        this.name = obj.name;
-    }
-    if ("description" in obj) {
-        this.description = obj.description;
-    }
-    if ("portraitID" in obj) {
-        this.portraitID = obj.portraitID;
-    }
     this.inventories = {};
     if ("inventories" in obj) {
         for (var inventoryName in obj.inventories){
@@ -101,8 +61,4 @@ Embodiment.prototype.parseObject = function (obj, bKeepID) {
         }
     }
     return this;
-};
-
-Embodiment.prototype.serializeJSON = function() {
-    return JSON.stringify(this);
 };

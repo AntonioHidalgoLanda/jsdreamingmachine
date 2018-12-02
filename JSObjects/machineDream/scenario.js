@@ -1,4 +1,4 @@
-/*global Container*/
+/*global Container, Scenario*/
 
 Scenario.prototype = new Container();
 Scenario.prototype.constructor = Scenario;
