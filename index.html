@@ -11,7 +11,14 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/basic.css">
         <link rel="stylesheet" type="text/css" href="/DreamingMachine/css/gameui.css">
+        <!-- Libraries
+        <script type="text/javascript" src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+        -->
         <script type="text/javascript" src="/JSObjects/libs/jquery/jquery.js"></script>
+        <!-- Rule Engile -->
+        <script type="text/javascript" src="/JSObjects/libs/axiom-assert-helper-master/assertHelper.js"></script>
+        <script type="text/javascript" src="/JSObjects/libs/axiom-rule-engine-master/rule_engine.js"></script>
+        <!-- Core Components -->
         <script type="text/javascript" src="/JSObjects/machineDream/masterObject.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/actionable.js"></script>
         <script type="text/javascript" src="/JSObjects/machineDream/embodiment.js"></script>
@@ -107,8 +114,28 @@ and open the template in the editor.
         var target = self.getInventory("Belongings").collectables[0];
         console.log("getActions with targer: " + self.name);
         console.log(executorHandler.getActions(self));
-
         
+        
+//
+// Rule Engine - This should go to another file
+//
+        var RulesEngine = new hybridRulesEngine();
+        
+        // No rules matches
+        RulesEngine.defaultResult={'Color': '#D73027','Comment': 'Default Message'};
+        
+        //between, in, notin, lt, lteq, gt, gteq, eq, nteq
+        RulesEngine.addRule([{field:"field1",filterType:"between",value:[26, 35]},
+                      {field:"field2",filterType:"between",value:[26,35]}],
+                        {'field3': '#1A9850','field4': 'xxxxx'});
+        
+        
+        retRestult=RulesEngine.getResult({field1:26,field2:29});
+        console.log("retRestult AND");
+        console.log(retRestult);
+        console.log("retRestult OR");
+        retRestult=RulesEngine.getResult({field1:22,field2:29});
+        console.log(retRestult);
         
     </script>
 </html>

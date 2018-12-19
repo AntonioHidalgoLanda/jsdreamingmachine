@@ -1,0 +1,19 @@
+{
+  "name": "axiom-assert-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "assertHelper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darshit-shah/axiom-assert-helper.git"
+  },
+  "author": "darshit@byteprophecy.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/darshit-shah/axiom-assert-helper/issues"
+  },
+  "homepage": "https://github.com/darshit-shah/axiom-assert-helper#readme"
+}
